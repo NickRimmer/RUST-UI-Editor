@@ -1,4 +1,4 @@
-export let images = [
+export const images = [
     "/assets/images/screen1.jpg", 
     "/assets/images/screen2.jpg", 
     "/assets/images/screen3.jpg",
@@ -7,35 +7,45 @@ export let images = [
     "/assets/images/screen6.jpg"
 ];
 
-export let config = {
-    image: "",
-    width: 0,
-    height: 0,
+class Config{
+    static StorageKey = "previewScreen.config";
+    
+    image;
+    width;
+    height;
 
-    load: function () {
-        this.image = localStorage.getItem("previewScreen.config.image") || images[0];
-        this.width = localStorage.getItem("previewScreen.config.width") || 1280;
-        this.height = localStorage.getItem("previewScreen.config.height") || 682;
-    },
+    //constructor(image, width, height);
+    constructor(image, width, height){
+        this.image = image;
+        this.width = width;
+        this.height = height;
+    }
 
-    save: function (image, width, height) {
+    static load(){
+        var s = localStorage.getItem(Config.StorageKey);
+        if(s) return JSON.parse(s);
+        return new Config(images[0], 1280, 682);
+    }
+
+    update(image, width, height){
         this.image = image;
         this.width = width;
         this.height = height;
 
-        localStorage.setItem("previewScreen.config.image", image);
-        localStorage.setItem("previewScreen.config.width", width);
-        localStorage.setItem("previewScreen.config.height", height);
+        var s = JSON.stringify(this);
+        localStorage.setItem(Config.StorageKey, s);
     }
-};
+}
+
+export const config = Config.load();
 
 $(function () {
-    config.load();
+    //config.load();
     updateView();
 })
 
 export function update(image, width, height) {
-    config.save(image, width, height);
+    config.update(image, width, height);
     updateView();
 }
 
