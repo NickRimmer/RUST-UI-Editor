@@ -19,7 +19,7 @@ layouts_dir: ./_layouts
 includes_dir: ./_includes
 
 markdown: kramdown
-theme: minima
+theme: 
 
 # Exclude from processing.
 exclude:
