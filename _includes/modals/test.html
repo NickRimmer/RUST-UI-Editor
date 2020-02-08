@@ -1,0 +1,22 @@
+{% capture content %}
+
+<div modal-save="testModalSaved" modal-show="testModalShowed">Test modal dialog</div>
+
+{% endcapture %}
+
+<script>
+    $(function(){
+        // bind something
+    })
+
+    function testModalShowed(){
+        console.log("testModalShowed");    
+    }
+
+    function testModalSaved(){
+        console.log("testModalSaved");
+        // return false; // to cancel form closing
+    }
+</script>
+
+{% include modals/_template.html content=content id="testModal" title="Test dialog" %}

@@ -10,8 +10,7 @@
 
   <!-- Bootstrap core CSS -->
   {% include styles.html %}
-
-  <meta name="theme-color" content="#563d7c">
+    <meta name="theme-color" content="#563d7c">
   <!-- <link href="/assets/main.css" rel="stylesheet"> -->
 </head>
 
@@ -26,13 +25,14 @@
     <div class="row">
       {% include left-side.html %}
 
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <main role="main" class="col-10 ml-auto px-0">
         <div class="container-fluid py-3">{{ content }}</div>
       </main>
     </div>
   </div>
 
-{% include scripts.html %}
+  {% include scripts.html %}
+  {% include modals.html %}
 </body>
 
 </html>

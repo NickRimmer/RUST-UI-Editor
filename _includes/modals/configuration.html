@@ -1,0 +1,71 @@
+{% capture content %}
+
+<div class="form-group" modal-save="bgExampleModalSaved" modal-show="bgExampleModalShowed">
+    <div class="form-row">
+        <div class="col">
+            <input id="bgExampleWidth" type="number" class="form-control" placeholder="Preview width (eg. 1280)">
+        </div>
+        <div class="col">
+            <input id="bgExampleHeight" type="number" class="form-control" placeholder="Preview height (eg. 682)">
+        </div>
+    </div>
+    <small id="bg-example-help" class="form-text text-muted">Examples: 
+        <a href="#" class="preview-size-example">1920x1080</a>, 
+        <a href="" class="preview-size-example">1280x682</a>, 
+        <a href="" class="preview-size-example">1024x768</a>
+    </small>
+</div>
+
+<div class="form-group" modal-save="bgExampleModalSaved" modal-show="bgExampleModalShowed">
+    <label for="bg-example">Preview background</label>
+    <select id="bg-example" class="form-control" aria-describedby="bg-example-help"></select>
+    <small id="bg-example-help" class="form-text text-muted">Will not be added to result JSON</small>
+</div>
+
+<div class="form-group">
+    <img src="/assets/images/screen1.jpg" width="450" id="bg-example-preview">
+</div>
+
+{% endcapture %}
+
+<script>
+    $(function () {
+        var i = 1;
+        bgExamples.forEach((e) => {
+            $("#bg-example").append('<option value="' + e + '">Picture ' + (i++) + '</option>');
+        });
+
+        $("#bg-example").on("change", updateExampleBgPreview);
+        $(".preview-size-example").on("click", previewPresetSize);
+    })
+
+    function bgExampleModalShowed() {
+        $("#bg-example").val(bgExampleImage);
+        $("#bgExampleWidth").val(bgExampleWidth);
+        $("#bgExampleHeight").val(bgExampleHeight);
+
+        updateExampleBgPreview();
+    }
+
+    function bgExampleModalSaved() {
+        bgExampleImage = $("#bg-example").val();
+        bgExampleWidth = $("#bgExampleWidth").val();
+        bgExampleHeight = $("#bgExampleHeight").val();
+
+        updateBgExampleView();
+    }
+
+    function updateExampleBgPreview() {
+        $("#bg-example-preview").prop("src", "/assets/images/" + $("#bg-example").val());
+    }
+
+    function previewPresetSize(e){
+        var values = $(e.target).text().split("x");
+        $("#bgExampleWidth").val(values[0]);
+        $("#bgExampleHeight").val(values[1]);
+
+        return false;
+    }
+</script>
+
+{% include modals/_template.html content=content id="configurationModal" title="Main configuration" %}
