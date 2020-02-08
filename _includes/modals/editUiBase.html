@@ -1,0 +1,30 @@
+{% assign id = "editUiBase" %}
+{% assign title = "Add base UI container" %}
+{% capture content %}
+
+<div>Hello, Universe!</div>
+<div id="edit-ui-test"></div>
+
+{% endcapture %}
+{% include modals/_template.html content=content id=id title=title %}
+
+<script type="module">
+    //import { previewImages, previewConfig, previewUpdate } from '/assets/scripts/editor.js';
+    var dialog = $("#{{id}}");
+
+    $(function () {
+        dialog.on("show.bs.modal", onShowed);
+        $("form", dialog).on("submit", onSaved);
+    })
+
+    function onShowed() {
+        var el = dialog.data("el");
+        $("#edit-ui-test").html(JSON.stringify(el));
+    }
+
+    function onSaved() {
+        dialog.modal("hide");
+
+        return false;
+    }
+</script>

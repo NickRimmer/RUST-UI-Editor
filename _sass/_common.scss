@@ -27,3 +27,12 @@ body{
         color: #fff;
     }
 }
+
+a{
+    color: #007bff;
+
+    &:hover{
+        color: #65abf7;
+        text-decoration: none;
+    }
+}

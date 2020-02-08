@@ -1,7 +1,9 @@
 export class UiBasicElement {
-    constructor(xMin, xMax, yMin, yMax) {
-        this.name = "random-" + Math.random();
-        this.parent = "Hud";
+    static DefaultParent = "_";
+
+    constructor(xMin, xMax, yMin, yMax, name, parent) {
+        this.name = name || "random-" + Math.random();
+        this.parent = parent || UiBasicElement.DefaultParent;
         this.components = [new UiBasicComponent(xMin, xMax, yMin, yMax)];
     }
 }

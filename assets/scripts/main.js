@@ -12,7 +12,7 @@ $(function(){
 })
 
 function test(){
-    var t = new UiBasicElement(0, 1, .1, .9);
+    //var t = new UiBasicElement(0, 1, .1, .9);
     //console.log(t.toString());
-    console.log(JSON.stringify(t));
+    //console.log(JSON.stringify(t));
 }

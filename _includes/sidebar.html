@@ -1,0 +1,25 @@
+<nav class="col-2 bg-light sidebar">
+  <div class="sidebar-sticky">
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>UI Elements</span>
+      <a href="#editUiBase" data-toggle="modal" class="btn-icon"><i class="fas fa-plus-circle"></i></a>
+    </h6>
+    <div class="px-3 no-elements d-none"><a href="#editUiBase" data-toggle="modal">Add</a> you first component</div>
+    <ul id="els" class="nav flex-column mb-2"></ul>
+  </div>
+</nav>
+
+<script type="module">
+  import { buildMenu } from "/assets/scripts/sidebar.js";
+  import { UiBasicElement } from "/assets/scripts/uiBasic.js";
+
+  $(function(){
+    //TODO remove it
+    var els = [];
+    els.push(new UiBasicElement(0, 0, 1, 1, "root-first"));
+    els.push(new UiBasicElement(0, 0, 1, 1, "some-label", "root-first"));
+    els.push(new UiBasicElement(0, 0, 1, 1, "root-second"));
+
+    buildMenu(els);
+  })
+</script>
