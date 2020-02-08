@@ -9,6 +9,7 @@ $(function(){
     }
 
     $(".modal").parent("form").on("submit", modalSubmit);
+    $(".modal").on("show.bs.modal", modalShow);
 })
 
 function modalSubmit(e){
@@ -24,4 +25,10 @@ function modalSubmit(e){
         console.warn(form);
     }
     return false;
+}
+
+function modalShow(e){
+    var form = e.target;
+    var fn = $("[modal-show]", form).attr("modal-show");
+    if(fn) window[fn](form);
 }
