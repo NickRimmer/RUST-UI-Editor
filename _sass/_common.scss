@@ -1,8 +1,29 @@
 .btn-icon{
     font-size: 130%;
+    color: #e0e0e0;
+
+    &:hover{
+        color: #fff;
+    }
 }
 
 #game-screen{
     background-position: center;
     background-size: cover;
+}
+
+body{
+    background-color: #272b30;
+}
+
+.sidebar{
+    background-color: #343a40!important;
+
+    .sidebar-heading{
+        color: #c3c3c3;
+    }
+
+    .nav-link{
+        color: #fff;
+    }
 }
