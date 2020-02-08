@@ -1,22 +1,29 @@
+{% assign id = "testModal" %}
+{% assign title = "Test Dialog" %}
 {% capture content %}
 
-<div modal-save="testModalSaved" modal-show="testModalShowed">Test modal dialog</div>
+<div>Hello, Universe!</div>
 
 {% endcapture %}
+{% include modals/_template.html content=content id=id title=title %}
 
-<script>
-    $(function(){
-        // bind something
+<script type="module">
+    //import { previewImages, previewConfig, previewUpdate } from '/assets/scripts/editor.js';
+    var dialog = $("#{{id}}");
+
+    $(function () {
+        dialog.on("show.bs.modal", onShowed);
+        $("form", dialog).on("submit", onSaved);
     })
 
-    function testModalShowed(){
-        console.log("testModalShowed");    
+    function onShowed() {
+        console.log("Test dialog showed");
     }
 
-    function testModalSaved(){
-        console.log("testModalSaved");
-        // return false; // to cancel form closing
+    function onSaved() {
+        console.log("Test dialog submitted");
+        dialog.modal("hide");
+
+        return false;
     }
 </script>
-
-{% include modals/_template.html content=content id="testModal" title="Test dialog" %}
