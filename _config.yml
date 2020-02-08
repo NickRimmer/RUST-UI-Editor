@@ -13,11 +13,6 @@ email: xan@dipteram.com
 description: JSON generation tool
 
 # Build settings
-source: ./src
-destination: ./build
-layouts_dir: ./_layouts
-includes_dir: ./_includes
-
 markdown: kramdown
 theme: 
 
