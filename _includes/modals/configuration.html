@@ -18,11 +18,17 @@
     </small>
 </div>
 
-<div class="form-group" modal-save="bgExampleModalSaved" modal-show="bgExampleModalShowed">
+<div class="form-group">
     <label for="bg-example">Preview background</label>
     <select id="bg-example" class="form-control" aria-describedby="bg-example-help"></select>
     <small id="bg-example-help" class="form-text text-muted">Will not be added to result JSON</small>
 </div>
+
+<div class="form-group d-none">
+    <label for="bg-example-custom">URL to your custom picture</label>
+    <input type="text" id="bg-example-custom" class="form-control">
+</div>
+
 
 <div class="form-group">
     <img src="/assets/images/screen1.jpg" width="450" id="bg-example-preview">
@@ -32,38 +38,54 @@
 {% include modals/_template.html content=content id=id title=title %}
 
 <script type="module">
-    import { previewImages, previewConfig, previewUpdate } from '/assets/scripts/editor.js';
+    import { images, config, update } from '/assets/scripts/previewScreen.js';
     var dialog = $("#{{id}}");
 
     $(function () {
         var i = 1;
-        previewImages.forEach((e) => {
+        images.forEach((e) => {
             $("#bg-example").append('<option value="' + e + '">Picture ' + (i++) + '</option>');
         });
+        $("#bg-example").append('<option value="">Custom  picture</option>');
 
         dialog.on("show.bs.modal", onShowed);
         $("form", dialog).on("submit", onSaved);
 
         $("#bg-example").on("change", updatePreviewImage);
+        $("#bg-example-custom").on("change blur keyup", updatePreviewImage);
         $(".preview-size-example").on("click", presetSize);
     })
 
     function onShowed() {
-        $("#bg-example").val(previewConfig.image);
-        $("#bgExampleWidth").val(previewConfig.width);
-        $("#bgExampleHeight").val(previewConfig.height);
+        $("#bg-example").val(config.image);
+        if(!$("#bg-example").val()){
+            $("#bg-example").val("");
+            $("#bg-example-custom").val(config.image);
+        }
+
+        $("#bgExampleWidth").val(config.width);
+        $("#bgExampleHeight").val(config.height);
 
         updatePreviewImage();
     }
 
     function onSaved() {
-        previewUpdate($("#bg-example").val(), $("#bgExampleWidth").val(), $("#bgExampleHeight").val());
+        var src = $("#bg-example").val() || $("#bg-example-custom").val();
+        update(src, $("#bgExampleWidth").val(), $("#bgExampleHeight").val());
         dialog.modal("hide");
         return false;
     }
 
     function updatePreviewImage() {
-        $("#bg-example-preview").prop("src", "/assets/images/" + $("#bg-example").val());
+        var src = $("#bg-example").val();
+        if(src == ""){
+            $("#bg-example-custom").parent().removeClass("d-none");
+            src = $("#bg-example-custom").val();
+        }else{
+            $("#bg-example-custom").parent().addClass("d-none");
+        }
+
+        $("#bg-example-preview").prop("src", src);
     }
 
     function presetSize(e){
