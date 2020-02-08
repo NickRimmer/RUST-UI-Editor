@@ -36,3 +36,11 @@ host: 127.0.0.1
 baseurl: ""
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 show_dir_listing: false
+
+# Scopes
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: "default"
