@@ -5,11 +5,11 @@
       <!-- <a href="#" class="btn-icon btn-add-component"><i class="fas fa-plus-circle"></i></a> -->
 
       <div class="dropdown">
-        <a class="dropdown-toggle btn-icon" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="dropdown-toggle btn-icon" href="#" role="button" id="btn-add-element" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-plus-circle"></i>
         </a>
 
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <div class="dropdown-menu" aria-labelledby="btn-add-element">
           <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item disabled" href="#">Text</a>
@@ -28,11 +28,11 @@
 <script type="module">
   import { updateMenu } from "/assets/scripts/sidebar.js";
   import { createElement } from "/assets/scripts/ui.js";
-  import { showProperties } from '/assets/scripts/element-properties.js';
+  import { showProperties, hideProperties } from '/assets/scripts/element-properties.js';
 
   $(function () {
     updateMenu();
-
+    $("#btn-add-element").on("click", hideProperties);
     $("#btn-add-component-panel").on("click", addPanel);
   })
 

@@ -3,7 +3,7 @@
 {% capture content %}
 
 <div>
-    <textarea id="exportJsonTa" rows="20" class="w-100"></textarea>
+    <textarea readonly id="exportJsonTa" rows="20" class="w-100"></textarea>
 </div>
 
 {% endcapture %}
@@ -11,6 +11,8 @@
 
 <script type="module">
     import { uiElements, jsonSpacer } from "/assets/scripts/app.js";
+    import { hideProperties } from '/assets/scripts/element-properties.js';
+
     var dialog = $("#{{id}}");
 
     $(function () {
@@ -18,6 +20,7 @@
     })
 
     function onShowed() {
+        hideProperties();
         $("#exportJsonTa").val(JSON.stringify(uiElements, null, jsonSpacer));
     }
 </script>
