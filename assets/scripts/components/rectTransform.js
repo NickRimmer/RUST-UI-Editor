@@ -3,10 +3,10 @@ import { BaseComponent } from "./base.js";
 
 export class RectTransformComponent extends BaseComponent {
     constructor(data){
-        super(data, "ui-component-configuration-rectTransform");
+        super(data, "rect-transform-component-properties");
     }
 
-    renderConfiguration(){
+    renderProperties(){       
         var mins = this.data.anchormin.split(" ");
         var maxs = this.data.anchormax.split(" ");
         
@@ -16,6 +16,9 @@ export class RectTransformComponent extends BaseComponent {
         $("#yMax", this.configurationView).val(maxs[1]);
 
         this.configurationView.data("handler", this);
+
+        //console.log(this.configurationView);
+
         return this.configurationView;
     }
 

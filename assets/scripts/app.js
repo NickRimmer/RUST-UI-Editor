@@ -6,11 +6,13 @@ export let jsonSpacer = "    ";
 
 var askBeforeUnload = false;
 
-$(function(){
-    window.onbeforeunload = function() {
-        if(askBeforeUnload) return "Changes you made may not be saved!";
+$(function () {
+    window.onbeforeunload = function () {
+        if (askBeforeUnload) return "Changes you made may not be saved!";
         return null;
     }
+
+    $(".draggable").draggable({ handle: ".draggable-handle", containment: "parent" });
 
     //TODO remove it
     uiElements.push(GetBasic(0, 1, 0, 1, "root-first"));

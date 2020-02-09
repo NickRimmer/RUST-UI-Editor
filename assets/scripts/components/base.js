@@ -1,14 +1,14 @@
 export class BaseComponent {
-    constructor(componentData, configurationViewClass) {
+    constructor(componentData, configurationViewId) {
         this.data = componentData;
 
-        if (configurationViewClass) {
-            this.configurationView = $("." + configurationViewClass).clone();
-            this.configurationView.removeClass(configurationViewClass)
+        if (configurationViewId) {
+            this.configurationView = $("#" + configurationViewId).clone();
+            this.configurationView.prop("id", null);
         }
     }
 
-    renderConfiguration() {
+    renderProperties() {
         return JSON.stringify(this.data);
     }
 

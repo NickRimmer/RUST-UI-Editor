@@ -30,7 +30,7 @@
 <script type="module">
   import { DefaultParent, GetBasic, RenderComponentConfiguration } from '/assets/scripts/uiTools.js';
   import { uiElements } from '/assets/scripts/app.js';
-  import { buildMenu } from '/assets/scripts/sidebar.js';
+  import { updateMenu } from '/assets/scripts/sidebar.js';
 
   var dialog = $("#{{id}}");
 
@@ -83,7 +83,7 @@
       uiElements.push(el);
     }
 
-    buildMenu(uiElements);
+    updateMenu();
     dialog.modal("hide");
     return false;
   }

@@ -1,0 +1,48 @@
+<form id="element-properties" class="d-none card draggable">
+    <div class="card-header draggable-handle pr-0">
+        Element properties
+        <button id="element-properties-close" type="button" class="close px-3" aria-label="Close" style="margin-top: -5px;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="card-body">
+        <!-- <h5 class="card-title">Card title</h5> -->
+        <!-- <p class="card-text">Hello, Universe!</p> -->
+        <!-- <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a> -->
+
+        <div class="form-group row">
+            <label for="ui-element-name" class="col-3 col-form-label">Name</label>
+            <div class="col-9"><input type="text" class="form-control" id="ui-element-name" required placeholder="Unique name of element"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="ui-element-parent" class="col-3 col-form-label">Parent</label>
+            <div class="col-9">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="ui-element-parent" aria-describedby="btn-reset-parent" required>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="button" id="btn-reset-parent">Top</button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+
+        <div id="edit-ui-components"></div>
+    </div>
+
+    <div class="card-footer text-right">
+        <button type="submit" id="element-properties-save" class="btn btn-primary" disabled>Save changes</button>
+    </div>
+</form>
+
+<div class="d-none">
+    {% include properties/rect-transform.html %}
+</div>
+
+<script type="module">
+    import { hideProperties } from "/assets/scripts/element-properties.js";
+    $(function(){
+        $("#element-properties-close").on("click", hideProperties);
+    })
+</script>

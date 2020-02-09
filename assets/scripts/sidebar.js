@@ -1,21 +1,19 @@
 'use strict';
 
 //import Sortable from 'sortablejs';
-import { GetBasic, DefaultParent } from './uiTools.js';
+import { defaultParent } from './ui.js';
+import { uiElements } from './app.js';
+import { showProperties } from './element-properties.js';
 
-let els = [];
-
-export function buildMenu(elements) {
-    els = elements;
-    
+export function updateMenu() {   
     $("#els").html("");
-    buildMenuLevel($("#els"), DefaultParent);
+    buildMenuLevel($("#els"), defaultParent);
     updateNoElementView();
     $("a", "#els").on("click", onElementClick);
 }
 
 function buildMenuLevel(menu, parentName){
-    els.filter(el => el.parent == parentName).forEach(el => {
+    uiElements.filter(el => el.parent == parentName).forEach(el => {
         var item = $(`<li class="nav-item"><a href="#" class="nav-link">${(el.name || 'unknown')}</a><ul class="nav flex-column ml-2"></ul></li>`);
         item.data("el", el);
 
@@ -36,8 +34,10 @@ function onElementClick(e){
     var item = $(e.target);
     var el = item.closest("li").data("el");
 
-    $("#uiElement").data("el", el);
-    $("#uiElement").modal("show");
+    showProperties(el);
+
+    //$("#uiElement").data("el", el);
+    //$("#uiElement").modal("show");
     
     return false;
 }
