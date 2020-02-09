@@ -1,0 +1,23 @@
+{% assign id = "exportModal" %}
+{% assign title = "Export JSON" %}
+{% capture content %}
+
+<div>
+    <textarea id="exportJsonTa" rows="20" class="w-100"></textarea>
+</div>
+
+{% endcapture %}
+{% include modals/_template.html content=content id=id title=title hideSave=true size="modal-xl" %}
+
+<script type="module">
+    import { uiElements, jsonSpacer } from "/assets/scripts/app.js";
+    var dialog = $("#{{id}}");
+
+    $(function () {
+        dialog.on("show.bs.modal", onShowed);
+    })
+
+    function onShowed() {
+        $("#exportJsonTa").val(JSON.stringify(uiElements, null, jsonSpacer));
+    }
+</script>

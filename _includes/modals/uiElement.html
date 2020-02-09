@@ -1,0 +1,69 @@
+{% assign id = "uiElement" %}
+{% assign title = "Rust UI element" %}
+{% capture content %}
+
+<div class="form-row">
+  <div class="form-group col-6">
+    <label for="ui-element-name">Name</label>
+    <input type="text" class="form-control" id="ui-element-name" required>
+  </div>
+  <div class="form-group col-6">
+    <label for="ui-element-parent">Parent</label>
+    <input type="text" class="form-control" id="ui-element-parent" required>
+  </div>
+</div>
+
+<div id="edit-ui-components"></div>
+
+{% endcapture %}
+{% include modals/_template.html content=content id=id title=title %}
+
+<div class="d-none">
+  {% include components/rectTransform.html %}
+</div>
+
+<script type="module">
+  import { DefaultParent, GetBasic, RenderComponentConfiguration } from '/assets/scripts/uiTools.js';
+  var dialog = $("#{{id}}");
+
+  $(function () {
+    dialog.on("show.bs.modal", onShowed);
+    dialog.on("hidden.bs.modal", onHidden);
+    $("form", dialog).on("submit", onSaved);
+  })
+
+  function onShowed() {
+    var el = dialog.data("el");
+
+    if (!el) el = GetBasic(0, 0, 1, 1);
+
+    $("#ui-element-name").val(el.name);
+    $("#ui-element-parent").val(el.parent);
+
+    $("#edit-ui-components").html("");
+    
+    el.components.forEach(component => {
+      var html = RenderComponentConfiguration(component);
+      $("#edit-ui-components").append(html);
+    });
+  }
+
+  function onSaved() {
+    //var el = dialog.data("el");
+    $("#edit-ui-components").children().each((i, component) => {
+      var handler = $(component).data("handler");
+      if(!handler){
+        console.warn("handler for component wasn't found )=");
+        return;
+      }
+      handler.save();
+    });
+
+    dialog.modal("hide");
+    return false;
+  }
+
+  function onHidden() {
+    dialog.data("el", null);
+  }
+</script>

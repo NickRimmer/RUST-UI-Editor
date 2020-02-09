@@ -36,8 +36,8 @@ function onElementClick(e){
     var item = $(e.target);
     var el = item.closest("li").data("el");
 
-    $("#editUiBase").data("el", el);
-    $("#editUiBase").modal("show");
+    $("#uiElement").data("el", el);
+    $("#uiElement").modal("show");
     
     return false;
 }
