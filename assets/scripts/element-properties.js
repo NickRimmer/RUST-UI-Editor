@@ -81,7 +81,8 @@ function save() {
         handler.save();
     });
 
-    fixChanges();
+    //fixChanges();
+    hideProperties();
     updateMenu();
 
     // to avoid form submit
