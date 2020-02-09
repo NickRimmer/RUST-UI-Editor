@@ -42,6 +42,10 @@ export function updateElement(el, name, parent){
     el.parent = parent;
 }
 
+export function addElement(el){
+    uiElements.push(el);
+}
+
 export function createElement(xMin, xMax, yMin, yMax, name, parent) {
     let result = {
         name: name || "random-" + Math.round(Math.random()*1000000000),

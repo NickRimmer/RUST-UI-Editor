@@ -1,10 +1,17 @@
 'use strict';
-import { defaultParent, renderComponentProperties, isParentCorrect, updateElement } from '/assets/scripts/ui.js';
 import { updateMenu } from '/assets/scripts/sidebar.js';
+import { 
+    defaultParent, 
+    renderComponentProperties, 
+    isParentCorrect,
+    updateElement, 
+    addElement, 
+    createElement } from '/assets/scripts/ui.js';
 
 let dialog;
 let el;
 let componentsArea;
+let isNew = false;
 
 $(function () {
     dialog = $("#element-properties");
@@ -19,7 +26,13 @@ $(function () {
 
 export function showProperties(elData) {
     dialog.removeClass("d-none");
-    el = elData;
+    if(!elData){
+        isNew = true;
+        el = createElement(0, 1, 0, 1, "rnd-" + (Math.round(Math.random()*10000000)), defaultParent);
+    }else{
+        isNew = false;
+        el = elData
+    };
     setupFields();
     renderComponents();
     
@@ -74,6 +87,11 @@ function save() {
         handler.save();
     });
 
+    if(isNew){
+        addElement(el);
+        isNew = false;
+    }
+
     fixChanges();
     updateMenu();
 
@@ -89,6 +107,11 @@ function fixChanges(){
 }
 
 function testChanges(){
+    if(isNew){
+        $("#element-properties-save", dialog).prop("disabled", false);
+        return;
+    }
+
     $("#element-properties-save", dialog).prop("disabled", true);
     $("input", dialog).each((i,e) => {
         if($(e).val() !== $(e).data("initial-value"))
