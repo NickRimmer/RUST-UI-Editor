@@ -41,3 +41,23 @@ export function updateElement(el, name, parent){
     el.name = name;
     el.parent = parent;
 }
+
+export function createElement(xMin, xMax, yMin, yMax, name, parent) {
+    let result = {
+        name: name || "random-" + Math.round(Math.random()*1000000000),
+        parent: parent || defaultParent,
+        components: [createTransform(xMin, xMax, yMin, yMax)]
+    }
+
+    return result;
+}
+
+export function createTransform(xMin, xMax, yMin, yMax) {
+    let result = {
+        type: "RectTransform",
+        anchormin: xMin + " " + yMin,
+        anchormax: xMax + " " + yMax
+    };
+
+    return result;
+}

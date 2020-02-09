@@ -1,5 +1,5 @@
 'use strict';
-import { GetBasic } from "/assets/scripts/uiTools.js";
+import { createElement } from "/assets/scripts/ui.js";
 
 export let uiElements = [];
 export let jsonSpacer = "    ";
@@ -15,7 +15,7 @@ $(function () {
     $(".draggable").draggable({ handle: ".draggable-handle", containment: "parent" });
 
     //TODO remove it
-    uiElements.push(GetBasic(0, 1, 0, 1, "root-first"));
-    uiElements.push(GetBasic(.1, .9, 0, 1, "some-label", "root-first"));
-    uiElements.push(GetBasic(0, 1, .5, .6, "root-second"));
+    uiElements.push(createElement(0, 1, 0, 1, "root-first"));
+    uiElements.push(createElement(.1, .9, 0, 1, "some-label", "root-first"));
+    uiElements.push(createElement(0, 1, .5, .6, "root-second"));
 })
