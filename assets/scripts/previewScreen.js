@@ -1,3 +1,5 @@
+'use strict';
+
 export const images = [
     "/assets/images/screen1.jpg", 
     "/assets/images/screen2.jpg", 

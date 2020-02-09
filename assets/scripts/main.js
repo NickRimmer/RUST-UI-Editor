@@ -1,4 +1,4 @@
-import { UiBasicElement } from './uiBasic.js';
+'use strict';
 
 var askBeforeUnload = false;
 
@@ -12,7 +12,5 @@ $(function(){
 })
 
 function test(){
-    //var t = new UiBasicElement(0, 1, .1, .9);
-    //console.log(t.toString());
-    //console.log(JSON.stringify(t));
+    
 }

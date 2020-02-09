@@ -1,5 +1,7 @@
+'use strict';
+
 //import Sortable from 'sortablejs';
-import { UiBasicElement } from './uiBasic.js';
+import { GetBasic, DefaultParent } from './uiTools.js';
 
 let els = [];
 
@@ -7,7 +9,7 @@ export function buildMenu(elements) {
     els = elements;
     
     $("#els").html("");
-    buildMenuLevel($("#els"), UiBasicElement.DefaultParent);
+    buildMenuLevel($("#els"), DefaultParent);
     updateNoElementView();
     $("a", "#els").on("click", onElementClick);
 }

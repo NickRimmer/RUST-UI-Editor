@@ -11,14 +11,14 @@
 
 <script type="module">
   import { buildMenu } from "/assets/scripts/sidebar.js";
-  import { UiBasicElement } from "/assets/scripts/uiBasic.js";
+  import { GetBasic } from "/assets/scripts/uiTools.js";
 
   $(function(){
     //TODO remove it
     var els = [];
-    els.push(new UiBasicElement(0, 0, 1, 1, "root-first"));
-    els.push(new UiBasicElement(0, 0, 1, 1, "some-label", "root-first"));
-    els.push(new UiBasicElement(0, 0, 1, 1, "root-second"));
+    els.push(GetBasic(0, 0, 1, 1, "root-first"));
+    els.push(GetBasic(0, 0, 1, 1, "some-label", "root-first"));
+    els.push(GetBasic(0, 0, 1, 1, "root-second"));
 
     buildMenu(els);
   })
