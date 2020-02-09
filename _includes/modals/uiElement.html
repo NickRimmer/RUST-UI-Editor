@@ -5,11 +5,16 @@
 <div class="form-row">
   <div class="form-group col-6">
     <label for="ui-element-name">Name</label>
-    <input type="text" class="form-control" id="ui-element-name" required>
+    <input type="text" class="form-control" id="ui-element-name" required placeholder="Unique name of element">
   </div>
   <div class="form-group col-6">
     <label for="ui-element-parent">Parent</label>
-    <input type="text" class="form-control" id="ui-element-parent" required>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" id="ui-element-parent" aria-describedby="btn-reset-parent" required>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="btn-reset-parent">Top</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -24,18 +29,29 @@
 
 <script type="module">
   import { DefaultParent, GetBasic, RenderComponentConfiguration } from '/assets/scripts/uiTools.js';
+  import { uiElements } from '/assets/scripts/app.js';
+  import { buildMenu } from '/assets/scripts/sidebar.js';
+
   var dialog = $("#{{id}}");
 
   $(function () {
     dialog.on("show.bs.modal", onShowed);
     dialog.on("hidden.bs.modal", onHidden);
     $("form", dialog).on("submit", onSaved);
+    $("#btn-reset-parent", dialog).on("click", resetParent);
   })
 
+  let isNew = false;
   function onShowed() {
-    var el = dialog.data("el");
+    isNew = false;
 
-    if (!el) el = GetBasic(0, 0, 1, 1);
+    let el = dialog.data("el");
+    if (!el) {
+      console.log("This is a new one");
+      el = GetBasic(0, 0, 1, 1);
+      dialog.data("el", el);
+      isNew = true;
+    }
 
     $("#ui-element-name").val(el.name);
     $("#ui-element-parent").val(el.parent);
@@ -49,7 +65,10 @@
   }
 
   function onSaved() {
-    //var el = dialog.data("el");
+    let el = dialog.data("el");
+    el.name = $("#ui-element-name").val();
+    el.parent = $("#ui-element-parent").val();
+
     $("#edit-ui-components").children().each((i, component) => {
       var handler = $(component).data("handler");
       if(!handler){
@@ -59,11 +78,21 @@
       handler.save();
     });
 
+    if(isNew === true){
+      console.log("add a new element");
+      uiElements.push(el);
+    }
+
+    buildMenu(uiElements);
     dialog.modal("hide");
     return false;
   }
 
   function onHidden() {
     dialog.data("el", null);
+  }
+
+  function resetParent(){
+    $("#ui-element-parent", dialog).val(DefaultParent);
   }
 </script>
