@@ -5,13 +5,12 @@ import {
     renderComponentProperties, 
     isParentCorrect,
     updateElement, 
-    addElement, 
+    removeElement,
     createElement } from '/assets/scripts/ui.js';
 
 let dialog;
 let el;
 let componentsArea;
-let isNew = false;
 
 $(function () {
     dialog = $("#element-properties");
@@ -19,20 +18,15 @@ $(function () {
 
     dialog.on("submit", save);
     $("#btn-reset-parent", dialog).on("click", resetParent);
-    //$("#element-properties-save", dialog).on("click", save);
+    $("#element-properties-close").on("click", hideProperties);
+    $("#element-properties-remove").on("click", remove);
     applyChangesListener(dialog);
     $("#ui-element-parent", dialog).on("change focus", () => $("#ui-element-parent", dialog).removeClass("is-invalid"));
 })
 
 export function showProperties(elData) {
     dialog.removeClass("d-none");
-    if(!elData){
-        isNew = true;
-        el = createElement(0, 1, 0, 1, "rnd-" + (Math.round(Math.random()*10000000)), defaultParent);
-    }else{
-        isNew = false;
-        el = elData
-    };
+    el = elData
     setupFields();
     renderComponents();
     
@@ -87,16 +81,18 @@ function save() {
         handler.save();
     });
 
-    if(isNew){
-        addElement(el);
-        isNew = false;
-    }
-
     fixChanges();
     updateMenu();
 
     // to avoid form submit
     return false;
+}
+
+function remove(){
+    //TODO add confirmation
+    removeElement(el);
+    updateMenu();
+    hideProperties();
 }
 
 function fixChanges(){
@@ -107,11 +103,6 @@ function fixChanges(){
 }
 
 function testChanges(){
-    if(isNew){
-        $("#element-properties-save", dialog).prop("disabled", false);
-        return;
-    }
-
     $("#element-properties-save", dialog).prop("disabled", true);
     $("input", dialog).each((i,e) => {
         if($(e).val() !== $(e).data("initial-value"))

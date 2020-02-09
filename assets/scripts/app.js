@@ -15,7 +15,7 @@ $(function () {
     $(".draggable").draggable({ handle: ".draggable-handle", containment: "parent" });
 
     //TODO remove it
-    uiElements.push(createElement(0, 1, 0, 1, "root-first"));
-    uiElements.push(createElement(.1, .9, 0, 1, "some-label", "root-first"));
-    uiElements.push(createElement(0, 1, .5, .6, "root-second"));
+    createElement(0, 1, 0, 1, "root-first");
+    createElement(.1, .9, 0, 1, "some-label", "root-first");
+    createElement(0, 1, .5, .6, "root-second");
 })

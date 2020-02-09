@@ -13,27 +13,27 @@ export const componentType = {
     image: "UnityEngine.UI.RawImage"
 };
 
-export function renderComponentProperties(component){
-    switch(component.type){
+export function renderComponentProperties(component) {
+    switch (component.type) {
         case componentType.button: return new BaseComponent(component).renderProperties();
         case componentType.rectTransform: return new RectTransformComponent(component).renderProperties();
-        
+
         default: return new BaseComponent(component).renderProperties();
     }
 }
 
-export function isParentCorrect(name){
+export function isParentCorrect(name) {
     var result = false;
-    uiElements.forEach(e=>{
-        if(e.name === name) result = true;
+    uiElements.forEach(e => {
+        if (e.name === name) result = true;
     });
 
-    if(name === defaultParent) result = true;
+    if (name === defaultParent) result = true;
 
     return result;
 }
 
-export function updateElement(el, name, parent){
+export function updateElement(el, name, parent) {
     uiElements
         .filter(e => e.parent == el.name)
         .forEach(e => e.parent = name);
@@ -42,18 +42,33 @@ export function updateElement(el, name, parent){
     el.parent = parent;
 }
 
-export function addElement(el){
+function addElement(el) {
     uiElements.push(el);
 }
 
-export function createElement(xMin, xMax, yMin, yMax, name, parent) {
+export function createElement(xMin, xMax, yMin, yMax, name, parent, component) {
     let result = {
-        name: name || "random-" + Math.round(Math.random()*1000000000),
+        name: name || "random-" + Math.round(Math.random() * 1000000000),
         parent: parent || defaultParent,
         components: [createTransform(xMin, xMax, yMin, yMax)]
     }
 
+    if (component) {
+        result.components.push(component);
+    }
+
+    addElement(result);
     return result;
+}
+
+export function removeElement(el) {
+    for (var i = uiElements.length; i--;)
+        if (uiElements[i] === el){
+            uiElements.filter(x=>x.parent == el.name).forEach(removeElement);
+            uiElements.splice(i, 1);
+        }
+
+    console.log(uiElements);
 }
 
 export function createTransform(xMin, xMax, yMin, yMax) {

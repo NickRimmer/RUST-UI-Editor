@@ -21,6 +21,10 @@ body{
 
     .sidebar-heading{
         color: #c3c3c3;
+
+        .dropdown{
+            text-transform: none;
+        }
     }
 
     .nav-link{

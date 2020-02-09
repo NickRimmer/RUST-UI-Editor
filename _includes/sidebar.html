@@ -2,7 +2,23 @@
   <div class="sidebar-sticky">
     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
       <span>UI Elements</span>
-      <a href="#" class="btn-icon btn-add-component"><i class="fas fa-plus-circle"></i></a>
+      <!-- <a href="#" class="btn-icon btn-add-component"><i class="fas fa-plus-circle"></i></a> -->
+
+      <div class="dropdown">
+        <a class="dropdown-toggle btn-icon" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-plus-circle"></i>
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item disabled" href="#">Text</a>
+          <a class="dropdown-item disabled" href="#">Button</a>
+          <a class="dropdown-item disabled" href="#">Solid color</a>
+          <a class="dropdown-item disabled" href="#">Image from url</a>
+        </div>
+      </div>
+
     </h6>
     <div class="px-3 no-elements d-none"><a href="#" class="btn-add-component">Add</a> you first component</div>
     <ul id="els" class="nav flex-column mb-2"></ul>
@@ -11,11 +27,18 @@
 
 <script type="module">
   import { updateMenu } from "/assets/scripts/sidebar.js";
+  import { createElement } from "/assets/scripts/ui.js";
   import { showProperties } from '/assets/scripts/element-properties.js';
 
   $(function () {
     updateMenu();
 
-    $(".btn-add-component").on("click", () => showProperties());
+    $("#btn-add-component-panel").on("click", addPanel);
   })
+
+  function addPanel() {
+    var el = createElement(0, 1, 0, 1);
+    updateMenu();
+    showProperties(el);
+  }
 </script>
