@@ -1,12 +1,12 @@
 'use strict';
 import { updateMenu } from '/assets/scripts/sidebar.js';
+import { renderComponentProperties } from "./ui-components.js";
 import { 
     defaultParent, 
-    renderComponentProperties, 
     isParentCorrect,
     updateElement, 
     removeElement
-} from '/assets/scripts/ui.js';
+} from '/assets/scripts/ui-elements.js';
 
 let dialog;
 let el;

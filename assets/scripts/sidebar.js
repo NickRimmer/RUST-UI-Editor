@@ -3,11 +3,8 @@
 //import Sortable from 'sortablejs';
 import { uiElements } from './app.js';
 import { showProperties, hideProperties } from './element-properties.js';
-import { 
-    defaultParent, 
-    createElement, 
-    addTextComponent 
-} from './ui.js';
+import { defaultParent, createElement } from './ui-elements.js';
+import { addTextComponent } from './ui-components.js';
 
 $(function () {
     updateMenu();

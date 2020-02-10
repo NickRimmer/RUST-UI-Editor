@@ -1,3 +1,5 @@
+'use strict';
+
 export class BaseComponent {
     constructor(componentData, configurationViewId) {
         this.data = componentData;

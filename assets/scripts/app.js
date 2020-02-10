@@ -1,9 +1,7 @@
 'use strict';
 
-import { 
-    createElement,
-    addTextComponent
-} from "/assets/scripts/ui.js";
+import { createElement } from "/assets/scripts/ui-elements.js";
+import { addTextComponent } from "/assets/scripts/ui-components.js";
 
 export let uiElements = [];
 export let jsonSpacer = "    ";
