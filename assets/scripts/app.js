@@ -1,5 +1,8 @@
 'use strict';
-import { createElement } from "/assets/scripts/ui.js";
+import { 
+    createElement,
+    addTextComponent
+} from "/assets/scripts/ui.js";
 
 export let uiElements = [];
 export let jsonSpacer = "    ";
@@ -17,5 +20,6 @@ $(function () {
     //TODO remove it
     createElement(0, 1, 0, 1, "root-first");
     createElement(.1, .9, 0, 1, "some-label", "root-first");
-    createElement(0, 1, .5, .6, "root-second");
+    var tmp = createElement(0, 1, .5, .6, "root-second");
+    addTextComponent(tmp, "Hello", 14);
 })

@@ -15,10 +15,10 @@ export class RectTransformComponent extends BaseComponent {
         $("#yMin", this.configurationView).val(mins[1]);
         $("#yMax", this.configurationView).val(maxs[1]);
 
-        this.configurationView.data("handler", this);
+        //this.configurationView.data("handler", this);
 
         //console.log(this.configurationView);
-
+        super.renderProperties();
         return this.configurationView;
     }
 

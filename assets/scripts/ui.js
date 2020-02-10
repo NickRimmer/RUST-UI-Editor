@@ -3,6 +3,7 @@
 import { uiElements } from "./app.js";
 import { BaseComponent } from "./components/base.js";
 import { RectTransformComponent } from "./components/rectTransform.js";
+import { TextComponent } from "./components/text.js";
 
 export let defaultParent = "Hud";
 export const componentType = {
@@ -15,7 +16,7 @@ export const componentType = {
 
 export function renderComponentProperties(component) {
     switch (component.type) {
-        case componentType.button: return new BaseComponent(component).renderProperties();
+        case componentType.text: return new TextComponent(component).renderProperties();
         case componentType.rectTransform: return new RectTransformComponent(component).renderProperties();
 
         default: return new BaseComponent(component).renderProperties();
@@ -50,8 +51,11 @@ export function createElement(xMin, xMax, yMin, yMax, name, parent, component) {
     let result = {
         name: name || "random-" + Math.round(Math.random() * 1000000000),
         parent: parent || defaultParent,
-        components: [createTransform(xMin, xMax, yMin, yMax)]
+        components: []
     }
+
+    // add base component
+    addTransformComponent(result, xMin, xMax, yMin, yMax);
 
     if (component) {
         result.components.push(component);
@@ -71,12 +75,26 @@ export function removeElement(el) {
     console.log(uiElements);
 }
 
-export function createTransform(xMin, xMax, yMin, yMax) {
-    let result = {
+export function addTransformComponent(el, xMin, xMax, yMin, yMax){
+    let component = {
         type: "RectTransform",
         anchormin: xMin + " " + yMin,
         anchormax: xMax + " " + yMax
     };
 
-    return result;
+    el.components.push(component);
+    return component;
+}
+
+export function addTextComponent(el, text, size, align, color) {
+    let component = {
+        type: "UnityEngine.UI.Text",
+        text: text || "Example text",
+        color: color || "1 1 1 1",
+        fontSize: size || 14,
+        align: align || "MiddleCenter"
+    };
+
+    el.components.push(component);
+    return component;
 }

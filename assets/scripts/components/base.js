@@ -4,12 +4,13 @@ export class BaseComponent {
 
         if (configurationViewId) {
             this.configurationView = $("#" + configurationViewId).clone();
-            this.configurationView.prop("id", null);
+            this.configurationView.removeProp("id");
         }
     }
 
     renderProperties() {
-        return JSON.stringify(this.data);
+        if(this.configurationView) this.configurationView.data("handler", this);
+        return `<div>${JSON.stringify(this.data)}</div>`;
     }
 
     save(){

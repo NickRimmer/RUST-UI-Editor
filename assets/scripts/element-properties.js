@@ -5,16 +5,21 @@ import {
     renderComponentProperties, 
     isParentCorrect,
     updateElement, 
-    removeElement,
-    createElement } from '/assets/scripts/ui.js';
+    removeElement
+} from '/assets/scripts/ui.js';
 
 let dialog;
 let el;
 let componentsArea;
+let componentItemTemplate;
 
 $(function () {
     dialog = $("#element-properties");
-    componentsArea = $("#edit-ui-components", dialog);
+    //componentsArea = $("#edit-ui-components", dialog);
+    componentsArea = $("#component-properties", dialog);
+    componentItemTemplate = $(".template", componentsArea).clone();
+    componentItemTemplate.removeClass("d-none template");
+    $(".template", componentsArea).remove();
 
     dialog.on("submit", save);
     $("#btn-reset-parent", dialog).on("click", resetParent);
@@ -50,9 +55,23 @@ function setupFields() {
 
 function renderComponents() {
     componentsArea.html("");
+    let firstOpened = false;
     el.components.forEach(component => {
         var html = renderComponentProperties(component);
-        componentsArea.append(html);
+        var item = componentItemTemplate.clone();
+        var id = "component-" + Math.round(Math.random()*10000000);
+        
+        $(".component-title", item).html(component.type);
+        $(".component-title", item).attr("data-target", "#" + id);
+        $(".component-properties", item).prop("id", id);
+        $(".component-properties", item).html(html);
+        if(!firstOpened){
+            $(".component-properties", item).addClass("show");
+            firstOpened = true;
+        }
+
+        item.data("component", component);
+        componentsArea.append(item);
     });
 
     applyChangesListener(componentsArea);
@@ -60,6 +79,7 @@ function renderComponents() {
 
 function applyChangesListener(parent){
     $("input", parent).on("change keyup click blur", testChanges);
+    $(".btn-remove", parent).on("click", removeComponent);
 }
 
 function save() {
@@ -71,17 +91,22 @@ function save() {
 
     updateElement(el, $("#ui-element-name", dialog).val(), parentName);
 
+    // replace old components
+    var newComponents = [];
     componentsArea.children().each((i, component) => {
-        var handler = $(component).data("handler");
+        var handler = $(".component-properties", component).children().data("handler");
+        console.log(handler);
         if (!handler) {
             console.warn("handler for component wasn't found )=");
             return false;
         }
 
         handler.save();
+        newComponents.push(handler.data);
     });
 
-    //fixChanges();
+    el.components = newComponents;
+
     hideProperties();
     updateMenu();
 
@@ -109,4 +134,23 @@ function testChanges(){
         if($(e).val() !== $(e).data("initial-value"))
             $("#element-properties-save", dialog).prop("disabled", false);
     });
+
+    if($(".list-group-item", dialog).length !== el.components.length){
+        $("#element-properties-save", dialog).prop("disabled", false);
+    }
+}
+
+function removeComponent(e){
+    //var component = $(e.target).closest(".list-group-item").data("component");
+    //console.log(component);
+
+    var item = $(e.target).closest(".list-group-item");
+    item.remove();
+
+    testChanges();
+    return false;
+}
+
+function addComponent(){
+    alert("Not implemented yet (=");
 }
