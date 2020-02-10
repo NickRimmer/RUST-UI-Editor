@@ -12,7 +12,7 @@
         <div class="dropdown-menu" aria-labelledby="btn-add-element">
           <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item disabled" href="#">Text</a>
+          <a class="dropdown-item" id="btn-add-component-text" href="#">Text</a>
           <a class="dropdown-item disabled" href="#">Button</a>
           <a class="dropdown-item disabled" href="#">Solid color</a>
           <a class="dropdown-item disabled" href="#">Image from url</a>
@@ -24,21 +24,3 @@
     <ul id="els" class="nav flex-column mb-2"></ul>
   </div>
 </nav>
-
-<script type="module">
-  import { updateMenu } from "/assets/scripts/sidebar.js";
-  import { createElement } from "/assets/scripts/ui.js";
-  import { showProperties, hideProperties } from '/assets/scripts/element-properties.js';
-
-  $(function () {
-    updateMenu();
-    $("#btn-add-element").on("click", hideProperties);
-    $("#btn-add-component-panel").on("click", addPanel);
-  })
-
-  function addPanel() {
-    var el = createElement(0, 1, 0, 1);
-    updateMenu();
-    showProperties(el);
-  }
-</script>

@@ -1,4 +1,5 @@
 'use strict';
+
 import { 
     createElement,
     addTextComponent
@@ -18,8 +19,8 @@ $(function () {
     $(".draggable").draggable({ handle: ".draggable-handle", containment: "parent" });
 
     //TODO remove it
-    createElement(0, 1, 0, 1, "root-first");
-    createElement(.1, .9, 0, 1, "some-label", "root-first");
-    var tmp = createElement(0, 1, .5, .6, "root-second");
+    createElement("root-first", 0, 1, 0, 1);
+    createElement("some-label", .1, .9, 0, 1, "root-first");
+    var tmp = createElement("root-text", 0, 1, .5, .6);
     addTextComponent(tmp, "Hello", 14);
 })

@@ -43,11 +43,7 @@ export function updateElement(el, name, parent) {
     el.parent = parent;
 }
 
-function addElement(el) {
-    uiElements.push(el);
-}
-
-export function createElement(xMin, xMax, yMin, yMax, name, parent, component) {
+export function createElement(name, xMin, xMax, yMin, yMax, parent, component) {
     let result = {
         name: name || "random-" + Math.round(Math.random() * 1000000000),
         parent: parent || defaultParent,
@@ -61,7 +57,7 @@ export function createElement(xMin, xMax, yMin, yMax, name, parent, component) {
         result.components.push(component);
     }
 
-    addElement(result);
+    uiElements.push(result);
     return result;
 }
 
@@ -78,8 +74,8 @@ export function removeElement(el) {
 export function addTransformComponent(el, xMin, xMax, yMin, yMax){
     let component = {
         type: "RectTransform",
-        anchormin: xMin + " " + yMin,
-        anchormax: xMax + " " + yMax
+        anchormin: (xMin||0) + " " + (yMin||0),
+        anchormax: (xMax||1) + " " + (yMax||1)
     };
 
     el.components.push(component);

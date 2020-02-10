@@ -95,7 +95,6 @@ function save() {
     var newComponents = [];
     componentsArea.children().each((i, component) => {
         var handler = $(".component-properties", component).children().data("handler");
-        console.log(handler);
         if (!handler) {
             console.warn("handler for component wasn't found )=");
             return false;
