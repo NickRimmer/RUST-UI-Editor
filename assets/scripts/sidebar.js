@@ -4,13 +4,14 @@
 import { uiElements } from './app.js';
 import { showProperties, hideProperties } from './element-properties.js';
 import { defaultParent, createElement } from './ui-elements.js';
-import { addTextComponent } from './ui-components.js';
+import { addTextComponent, addSolidComponent } from './ui-components.js';
 
 $(function () {
     updateMenu();
     $("#btn-add-element").on("click", hideProperties);
     $("#btn-add-component-panel").on("click", () => addElement("panel"));
     $("#btn-add-component-text").on("click", () => addElement("text", addTextComponent));
+    $("#btn-add-component-solid").on("click", () => addElement("solid", addSolidComponent));
 })
 
 export function updateMenu() {
