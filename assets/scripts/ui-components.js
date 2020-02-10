@@ -29,7 +29,7 @@ export function addTransformComponent(el, xMin, xMax, yMin, yMax){
         anchormax: (xMax||1) + " " + (yMax||1)
     };
 
-    el.components.push(component);
+    if(el) el.components.push(component);
     return component;
 }
 
@@ -42,7 +42,7 @@ export function addTextComponent(el, text, size, align, color) {
         align: align || "MiddleCenter"
     };
 
-    el.components.push(component);
+    if(el) el.components.push(component);
     return component;
 }
 
@@ -53,6 +53,6 @@ export function addSolidComponent(el, color) {
         color: color || "1 1 1 1",
     };
 
-    el.components.push(component);
+    if(el) el.components.push(component);
     return component;
 }

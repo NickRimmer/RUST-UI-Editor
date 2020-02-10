@@ -27,28 +27,33 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="according list-group row px-2" id="component-properties">
-            <div class="list-group-item p-0 d-none template">
+            <div class="list-group-item p-0 d-none component-item item-template">
                 <div class="component-title" data-toggle="collapse"></div>
                 <a class="btn-remove" href=""><i class="fas fa-trash"></i></a>
                 <div class="component-properties collapse" data-parent="#component-properties"></div>
             </div>
-            
-            <!-- 
-            <div class="list-group-item p-0">
-                <div id="c2-header" data-toggle="collapse" data-target="#c2-body">UnityEngine.UI.Button</div>
-                <div id="c2-body" class="collapse" data-parent="#accordionExample">
-                    <div>Some another properties...</div>
-                </div>
-            </div> -->
-        </div>
 
-        <div id="edit-ui-components-disabled"></div>
+            <div class="list-group-item btn-add p-0 add-template">
+                <div class="component-title" data-toggle="collapse" data-target="#add-components-area">Add component <i class="fas fa-plus float-right mr-1 mt-1 text-muted" style="padding-right: 1px;"></i></div>
+                <div id="add-components-area" class="component-properties collapse text-center" data-parent="#component-properties">
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" id="btn-add-component-rect" class="btn btn-secondary">Rect</button>
+                        <button type="button" id="btn-add-component-text" class="btn btn-secondary">Text</button>
+                        <button type="button" id="btn-add-component-solid" class="btn btn-secondary">Solid</button>
+                        <button type="button" id="btn-add-component-button" class="btn btn-secondary">Button</button>
+                        <button type="button" id="btn-add-component-image" class="btn btn-secondary">Image</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="card-footer text-right">
         <button type="button" id="element-properties-remove" class="btn btn-danger float-left"><i class="fas fa-trash"></i></button>
+
+        <!-- <button title="Add component" type="button" id="element-properties-add-component" class="btn btn-secondary"><i class="fas fa-plus-circle"></i></button> -->
         <button type="submit" id="element-properties-save" class="btn btn-primary" disabled>Save changes</button>
     </div>
 </form>
