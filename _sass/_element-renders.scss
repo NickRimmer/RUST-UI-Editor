@@ -5,3 +5,9 @@
 .element-render-solid{
     background: #fff;
 }
+
+.component-draggable-placeholder{
+    position: absolute;
+    border: dashed 2px #ffbc00;
+    cursor: grab;
+}

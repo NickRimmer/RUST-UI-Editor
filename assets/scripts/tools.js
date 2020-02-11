@@ -30,16 +30,12 @@ export function pixelsToPoints(left, bottom, width, height){
     width = width * 1.0;
     height = height * 1.0;
 
-    console.log({x,y});
-    console.log({left,bottom});
-
     let xMin = round(left / x);
     let yMin = round(bottom / y);
     let xMax = round((left + width) / x);
     let yMax = round((bottom + height) / y);
 
     var result = { xMin, yMin, xMax, yMax };
-    console.log(result);
 
     return result;
 }

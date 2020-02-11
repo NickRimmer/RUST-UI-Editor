@@ -13,7 +13,7 @@ export const componentType = {
     image: "UnityEngine.UI.RawImage"
 };
 
-function getHandler(component){
+export function getHandler(component){
     switch (component.type) {
         case componentType.text: return new TextComponent(component);
         case componentType.rectTransform: return new RectTransformComponent(component);

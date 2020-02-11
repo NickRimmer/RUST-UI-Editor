@@ -1,11 +1,14 @@
 'use strict';
 import { updateElements } from './app.js';
+import { pointsToPixels } from "./tools.js";
 
 import { 
     renderComponentProperties,
     addTransformComponent,
     addTextComponent,
-    addSolidComponent
+    addSolidComponent,
+    componentType,
+    getHandler
 } from "./ui-components.js";
 
 import { 
@@ -55,10 +58,12 @@ export function showProperties(elData) {
     renderComponents();
     
     fixChanges();
+    setDraggableElement(true);
 }
 
 export function hideProperties() {
     dialog.addClass("d-none");
+    setDraggableElement(false);
 }
 
 function resetParent() {
@@ -180,4 +185,44 @@ function removeComponent(e){
 
     testChanges();
     return false;
+}
+
+function setDraggableElement(state){
+    let rect = el.components.find(c => c.type === componentType.rectTransform);
+    if(!rect) state = false;
+
+    if(state === true){
+        // add draggable placeholder
+        let holder = $(`<div class="component-draggable-placeholder"></div>`);
+        let transform = pointsToPixels(rect.anchormin, rect.anchormax);
+        holder.css({
+            "left": transform.left,
+            "bottom": transform.bottom,
+            "width": transform.width,
+            "height": transform.height
+        });
+
+        $("#game-screen").append(holder);
+        holder.draggable();
+        holder.on("drag", onElementDrag);
+    }else{
+        // remove draggable placeholder
+        $(".component-draggable-placeholder", "#game-screen").remove();
+    }
+}
+
+function onElementDrag(){
+    let rect = el.components.find(c => c.type === componentType.rectTransform);
+    if(!rect) state = false;
+
+    let holder = $(".component-draggable-placeholder", "#game-screen");
+    let left = holder.css("left").replace(/[^-\d\.]/g, '') * 1;
+    let bottom = holder.css("bottom").replace(/[^-\d\.]/g, '') * 1;
+
+    let transform = pointsToPixels(rect.anchormin, rect.anchormax);
+    updateElementPreviewTransform(left, bottom, transform.width, transform.height);
+}
+
+function updateElementPreviewTransform(left, bottom, width, height){
+    console.log({left, bottom, width, height});
 }
