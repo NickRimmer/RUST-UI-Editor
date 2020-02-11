@@ -1,5 +1,5 @@
 'use strict';
-import { updateMenu } from '/assets/scripts/sidebar.js';
+import { updateElements } from './app.js';
 
 import { 
     renderComponentProperties,
@@ -137,8 +137,9 @@ function save() {
 
     el.components = newComponents;
 
-    hideProperties();
-    updateMenu();
+    //hideProperties();
+    fixChanges();
+    updateElements();
 
     // to avoid form submit
     return false;
@@ -147,7 +148,7 @@ function save() {
 function remove(){
     //TODO add confirmation
     removeElement(el);
-    updateMenu();
+    updateElements();
     hideProperties();
 }
 

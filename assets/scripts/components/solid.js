@@ -11,6 +11,25 @@ export class SolidComponent extends BaseComponent {
         return this.configurationView;
     }
 
+    renderView(el){
+        let view = $('<div class="element-render-item element-render-solid"></div>');
+        let transform = this.getTransform(el);
+
+        if(!transform) {
+            console.warn("Solid component can't be rendered without RectTransform component");
+            return;
+        }
+
+        view.css({
+            "left": transform.left,
+            "bottom": transform.bottom,
+            "width": transform.width,
+            "height": transform.height
+        });
+
+        $("#game-screen").append(view);
+    }
+
     save(){
         
     }

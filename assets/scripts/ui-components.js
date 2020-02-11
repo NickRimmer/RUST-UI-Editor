@@ -3,6 +3,7 @@
 import { RectTransformComponent } from "./components/rectTransform.js";
 import { TextComponent } from "./components/text.js";
 import { SolidComponent } from "./components/solid.js";
+import { uiElements } from "./app.js";
 
 export const componentType = {
     rectTransform: "RectTransform",
@@ -12,14 +13,23 @@ export const componentType = {
     image: "UnityEngine.UI.RawImage"
 };
 
-export function renderComponentProperties(component) {
+function getHandler(component){
     switch (component.type) {
-        case componentType.text: return new TextComponent(component).renderProperties();
-        case componentType.rectTransform: return new RectTransformComponent(component).renderProperties();
-        case componentType.solidColor: return new SolidComponent(component).renderProperties();
+        case componentType.text: return new TextComponent(component);
+        case componentType.rectTransform: return new RectTransformComponent(component);
+        case componentType.solidColor: return new SolidComponent(component);
 
-        default: return new BaseComponent(component).renderProperties();
+        default: return new BaseComponent(component);
     }
+}
+
+export function renderComponentProperties(component) {
+    return getHandler(component).renderProperties();
+}
+
+export function renderComponentViews(){
+    $("#game-screen").html("");
+    uiElements.forEach(el => el.components.forEach(comp => getHandler(comp).renderView(el)));
 }
 
 export function addTransformComponent(el, xMin, xMax, yMin, yMax){

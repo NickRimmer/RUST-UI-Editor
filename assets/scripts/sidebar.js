@@ -1,13 +1,11 @@
 'use strict';
 
-//import Sortable from 'sortablejs';
-import { uiElements } from './app.js';
+import { uiElements, updateElements } from './app.js';
 import { showProperties, hideProperties } from './element-properties.js';
 import { defaultParent, createElement } from './ui-elements.js';
 import { addTextComponent, addSolidComponent } from './ui-components.js';
 
 $(function () {
-    updateMenu();
     $("#btn-add-element").on("click", hideProperties);
     $("#btn-add-component-panel").on("click", () => addElement("panel"));
     $("#btn-add-component-text").on("click", () => addElement("text", addTextComponent));
@@ -45,7 +43,7 @@ function addElement(prefix, action){
     if(action) action(el);
 
     onElementLeave();
-    updateMenu();
+    updateElements();
     showProperties(el);
 }
 
