@@ -4,23 +4,24 @@
       <span>UI Elements</span>
       <!-- <a href="#" class="btn-icon btn-add-component"><i class="fas fa-plus-circle"></i></a> -->
 
-      <div class="dropdown">
-        <a class="dropdown-toggle btn-icon" href="#" role="button" id="btn-add-element" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-plus-circle"></i>
-        </a>
+      <div id="add-btn-area">
+        <div class="dropdown" id="add-btn-list">
+          <a class="dropdown-toggle btn-icon" href="#" role="button" id="btn-add-element" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-plus-circle"></i>
+          </a>
 
-        <div class="dropdown-menu" aria-labelledby="btn-add-element">
-          <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" id="btn-add-component-text" href="#">Text</a>
-          <a class="dropdown-item disabled" href="#">Button</a>
-          <a class="dropdown-item" href="#" id="btn-add-component-solid">Solid color</a>
-          <a class="dropdown-item disabled" href="#">Image from url</a>
+          <div class="dropdown-menu" aria-labelledby="btn-add-element">
+            <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" id="btn-add-component-text" href="#">Text</a>
+            <a class="dropdown-item disabled" href="#">Button</a>
+            <a class="dropdown-item" href="#" id="btn-add-component-solid">Solid color</a>
+            <a class="dropdown-item disabled" href="#">Image from url</a>
+          </div>
         </div>
       </div>
-
     </h6>
-    <div class="px-3 no-elements d-none"><a href="#" class="btn-add-component">Add</a> you first component</div>
+    <div class="px-3 no-elements d-none">Just add your first component</div>
     <ul id="els" class="nav flex-column mb-2"></ul>
   </div>
 </nav>

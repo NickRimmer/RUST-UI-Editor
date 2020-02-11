@@ -1,6 +1,6 @@
 'use strict';
 
-import { createElement } from "/assets/scripts/ui-elements.js";
+import { createElement, defaultParent } from "/assets/scripts/ui-elements.js";
 import { addTextComponent } from "/assets/scripts/ui-components.js";
 
 export let uiElements = [];
@@ -17,8 +17,8 @@ $(function () {
     $(".draggable").draggable({ handle: ".draggable-handle", containment: "parent" });
 
     //TODO remove it
-    createElement("root-first", 0, 1, 0, 1);
-    createElement("some-label", .1, .9, 0, 1, "root-first");
-    var tmp = createElement("root-text", 0, 1, .5, .6);
+    createElement("root-first", defaultParent, 0, 1, 0, 1);
+    createElement("some-label", "root-first", .1, .9, 0, 1);
+    var tmp = createElement("root-text", defaultParent, 0, 1, .5, .6);
     addTextComponent(tmp, "Hello", 14);
 })

@@ -1,11 +1,29 @@
 .sidebar{
-    .nav-item a{
+    .nav-item {
+        position: relative;
+
+        a{
+            &:hover{
+                opacity: .7;
+            }
+        }
+
         &:hover{
-            opacity: .7;
+            background-color: #3c434a;
         }
     }
 
     .no-elements{
         color: #fff;
+    }
+
+    #add-btn-list.detached{
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+
+    #add-btn-area{
+        height: 20px;
     }
 }

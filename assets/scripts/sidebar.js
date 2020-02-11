@@ -20,6 +20,10 @@ export function updateMenu() {
     
     updateNoElementView();
     $("a", "#els").on("click", onElementClick);
+    $(".el-item > a", "#els").on("mouseenter", onElementHover);
+    $(".el-item", "#els").on("mouseleave", onElementLeave);
+    $(".sidebar").on("mouseleave", onElementLeave);
+    //$("a", "#els").hover(onElementHover);
     
     $("ul", ".sidebar").disableSelection();
     $("ul", ".sidebar").sortable({
@@ -31,10 +35,16 @@ export function updateMenu() {
 
 function addElement(prefix, action){
     var name = prefix + "-" + Math.round(Math.random() * 1000000000);
-    var el = createElement(name);
+    var parentElement = $("#add-btn-list").parent("li");
+    console.log(parentElement[0]);
+    var parentName = parentElement.length > 0
+        ? $(parentElement).data("el").name
+        : defaultParent;
+    var el = createElement(name, parentName);
 
     if(action) action(el);
 
+    onElementLeave();
     updateMenu();
     showProperties(el);
 }
@@ -77,4 +87,18 @@ function onElementOrderChanged(e, u){
         console.log($(e).data("el").name);
         uiElements[i] = $(e).data("el");
     });
+}
+
+function onElementHover(e){
+    var btn = $("#add-btn-list");
+    var trg = $(e.target).closest(".el-item");
+
+    btn.addClass("detached");
+    trg.append(btn);
+}
+
+function onElementLeave(){
+    var btn = $("#add-btn-list");
+    btn.removeClass("detached");
+    $("#add-btn-area").append(btn);
 }

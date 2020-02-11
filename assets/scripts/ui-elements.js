@@ -25,7 +25,7 @@ export function updateElement(el, name, parent) {
     el.parent = parent;
 }
 
-export function createElement(name, xMin, xMax, yMin, yMax, parent, component) {
+export function createElement(name, parent, xMin, xMax, yMin, yMax, component) {
     let result = {
         name: name || "random-" + Math.round(Math.random() * 1000000000),
         parent: parent || defaultParent,
