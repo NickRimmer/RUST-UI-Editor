@@ -1,5 +1,6 @@
 'use strict';
 import { BaseComponent } from "./base.js";
+import { pointsToPixels, pixelsToPoints } from "./../tools.js";
 
 export class RectTransformComponent extends BaseComponent {
     constructor(data){
@@ -7,23 +8,26 @@ export class RectTransformComponent extends BaseComponent {
     }
 
     renderProperties(){       
-        var mins = this.data.anchormin.split(" ");
-        var maxs = this.data.anchormax.split(" ");
+        var pixels = pointsToPixels(this.data.anchormin, this.data.anchormax);
         
-        $("#xMin", this.configurationView).val(mins[0]);
-        $("#xMax", this.configurationView).val(maxs[0]);
-        $("#yMin", this.configurationView).val(mins[1]);
-        $("#yMax", this.configurationView).val(maxs[1]);
+        $("#transform-left", this.configurationView).val(pixels.left);
+        $("#transform-bottom", this.configurationView).val(pixels.bottom);
+        $("#transform-width", this.configurationView).val(pixels.width);
+        $("#transform-height", this.configurationView).val(pixels.height);
 
-        //this.configurationView.data("handler", this);
-
-        //console.log(this.configurationView);
         super.renderProperties();
         return this.configurationView;
     }
 
     save(){
-        this.data.anchormin = $("#xMin",this.configurationView).val() + " " + $("#yMin",this.configurationView).val();
-        this.data.anchormax = $("#xMax",this.configurationView).val() + " " + $("#yMax",this.configurationView).val();
+        var points = pixelsToPoints(
+            $("#transform-left",this.configurationView).val(),
+            $("#transform-bottom",this.configurationView).val(),
+            $("#transform-width",this.configurationView).val(),
+            $("#transform-height",this.configurationView).val()
+        )
+
+        this.data.anchormin = points.xMin + " " + points.yMin;
+        this.data.anchormax = points.xMax + " " + points.yMax;
     }
 }

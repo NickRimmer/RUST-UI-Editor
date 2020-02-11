@@ -23,7 +23,7 @@ $(function () {
     //var tmp = createElement("root-text", defaultParent, 0, 1, .5, .6);
     //addTextComponent(tmp, "Hello", 14);
     
-    var tmp = createElement("root-solid", defaultParent, 0, 1, .5, .6);
+    var tmp = createElement("root-solid", defaultParent, .4, .6, .4, .6);
     addSolidComponent(tmp, "1 1 1 0.5");
     
     updateElements();

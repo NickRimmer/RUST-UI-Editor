@@ -1,11 +1,12 @@
+<!-- 
 <div id="rect-transform-component-properties" class="ui-component pb-0">
     <div class="form-group row">
         <label for="ui-element-name" class="col-3 col-form-label">X pos</label>
         <div class="col-9">
             <div class="col">
                 <div class="row">
-                    <div class="col p-0 pr-1"><input id="xMin" type="number" step="0.001" class="form-control" placeholder="Minimum"></div>
-                    <div class="col p-0 pl-1"><input id="xMax" type="number" step="0.001" class="form-control" placeholder="Maximum"></div>
+                    <div class="col p-0 pr-1"><input id="xMin" type="number" step="1" class="form-control" placeholder="Minimum"></div>
+                    <div class="col p-0 pl-1"><input id="xMax" type="number" step="1" class="form-control" placeholder="Maximum"></div>
                 </div>
             </div>
         </div>
@@ -15,10 +16,48 @@
         <div class="col-9">
             <div class="col">
                 <div class="row">
-                    <div class="col p-0 pr-1"><input id="yMin" type="number" step="0.001" class="form-control" placeholder="Minimum"></div>
-                    <div class="col p-0 pl-1"><input id="yMax" type="number" step="0.001" class="form-control" placeholder="Maximum"></div>
+                    <div class="col p-0 pr-1"><input id="yMin" type="number" step="1" class="form-control" placeholder="Minimum"></div>
+                    <div class="col p-0 pl-1"><input id="yMax" type="number" step="1" class="form-control" placeholder="Maximum"></div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div> 
+-->
+
+<div id="rect-transform-component-properties" class="ui-component pb-0">
+    <div class="form-group row">
+        <label for="transform-left" class="col-2 col-form-label" title="Position">Pos</label>
+        <div class="col-10">
+            <div class="col">
+                <div class="row">
+                    <div class="col p-0 pr-1 input-group">
+                        <div class="input-group-prepend"><span class="input-group-text input-group-text-sm">X</span></div>
+                        <input id="transform-left" type="number" step="1" class="form-control">
+                    </div>
+                    <div class="col p-0 pr-1 input-group">
+                        <div class="input-group-prepend"><span class="input-group-text input-group-text-sm">Y</span></div>
+                        <input id="transform-bottom" type="number" step="1" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="transform-width" class="col-2 col-form-label">Size</label>
+        <div class="col-10">
+            <div class="col">
+                <div class="row">
+                    <div class="col p-0 pr-1 input-group">
+                        <div class="input-group-prepend"><span class="input-group-text input-group-text-sm" title="Width">W</span></div>
+                        <input id="transform-width" type="number" step="1" class="form-control">
+                    </div>
+                    <div class="col p-0 pr-1 input-group">
+                        <div class="input-group-prepend"><span class="input-group-text input-group-text-sm" title="Height">H</span></div>
+                        <input id="transform-height" type="number" step="1" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
