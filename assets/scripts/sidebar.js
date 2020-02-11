@@ -20,6 +20,13 @@ export function updateMenu() {
     
     updateNoElementView();
     $("a", "#els").on("click", onElementClick);
+    
+    $("ul", ".sidebar").disableSelection();
+    $("ul", ".sidebar").sortable({
+        distance: 5,
+        update: onElementOrderChanged,
+        axis: "y"
+    });
 }
 
 function addElement(prefix, action){
@@ -34,7 +41,7 @@ function addElement(prefix, action){
 
 function buildMenuLevel(menu, parentName) {
     uiElements.filter(el => el.parent == parentName).forEach(el => {
-        var item = $(`<li class="nav-item"><a href="#" class="nav-link">${(el.name || 'unknown')}</a><ul class="nav flex-column ml-2"></ul></li>`);
+        var item = $(`<li class="nav-item el-item"><a href="#" class="nav-link">${(el.name || 'unknown')}</a><ul class="nav flex-column ml-2"></ul></li>`);
         item.data("el", el);
 
         menu.append(item);
@@ -60,4 +67,14 @@ function onElementClick(e) {
     //$("#uiElement").modal("show");
 
     return false;
+}
+
+function onElementOrderChanged(e, u){
+    $(".el-item", ".sidebar").each(function(i, e){
+        let el = $(e).data("el");
+        if(!el) return;
+
+        console.log($(e).data("el").name);
+        uiElements[i] = $(e).data("el");
+    });
 }
