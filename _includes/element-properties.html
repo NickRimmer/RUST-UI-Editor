@@ -61,6 +61,8 @@
     'use strict';
     import { eventDefines } from "/assets/scripts/defines.js";
     import { elements } from "/assets/scripts/elements.js";
+    import RectTransform from "/assets/scripts/components/rect-transform.js";
+    import SolidComponent from "/assets/scripts/components/solid.js";
 
     let element;
     let dialog = $("#element-properties");
@@ -74,6 +76,8 @@
         $(window).on(eventDefines.elementsMenuClicked, (e, id) => openProperties(id));
 
         $("#element-properties-close").on("click", closeProperties);
+        $("#btn-add-component-rect", componentAddBtn).on("click", () => addComponent(new RectTransform()));
+        $("#btn-add-component-solid", componentAddBtn).on("click", () => addComponent(new SolidComponent()));
     })
 
     function openProperties(id) {
@@ -102,27 +106,32 @@
         $("#ui-element-parent", dialog).val(element.data.parent);
     }
 
-    function setupComponents() {
+    function setupComponents(idToOpen) {
         $(".component-item", componentsArea).remove();
+        if(element.components.length === 0) return;
 
-        element.data.components.forEach(component => {
+        element.components.forEach(component => {
             let html = component.renderProperties();
             if (html) {
                 let item = componentTemplate.clone();
-                let id = "component" + "_" + Math.round(Math.random() * 10000000);
 
                 $(".component-title", item).html(component.data.type);
-                $(".component-title", item).attr("data-target", "#" + id);
-                $(".component-properties", item).prop("id", id);
+                $(".component-title", item).attr("data-target", "#" + component.id);
+                $(".component-properties", item).prop("id", component.id);
                 $(".component-properties", item).html(html);
 
                 componentAddBtn.before(item);
             }
         });
 
-        let first = componentsArea.children()[0];
-        if (first) setTimeout(() => $(".collapse", first).collapse("show"), 100);
+        if(!idToOpen) idToOpen = element.components[0].id;
 
-        //TODO open first component
+        let componentView = $(`[id=${idToOpen}]`, componentsArea);
+        if (componentView) setTimeout(() => componentView.collapse("show"), 100);
+    }
+
+    function addComponent(component){
+        element.addComponent(component);
+        setupComponents(component.id);
     }
 </script>

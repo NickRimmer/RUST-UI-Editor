@@ -6,6 +6,7 @@ export default class BaseComponent{
     constructor(data, type){
         this.data = data;
         this.data.type = type;
+        this.id = ["component", Date.now(), Math.round(Math.random() * 1000)].join("_");
     }
 
     renderView(parent, element){

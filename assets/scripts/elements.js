@@ -8,14 +8,12 @@ export const elements = [];
 
 export function addElement(name, parent){
     let rectComponent = new RectTransform({anchormin: "0.4 0.4", anchormax: "0.6 0.6"});
-
     let data = {
         name: name || getRandomName("rnd"),
-        parent: parent || defaultParent,
-        components: [rectComponent]
+        parent: parent || defaultParent
     };
 
-    let element = new Element(data);
+    let element = new Element(data, rectComponent);
     elements.push(element);
     
     element.renderView();
