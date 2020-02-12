@@ -1,27 +1,81 @@
 <nav class="col-2 bg-light sidebar">
-  <div class="sidebar-sticky">
-    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-      <span>UI Elements</span>
-      <!-- <a href="#" class="btn-icon btn-add-component"><i class="fas fa-plus-circle"></i></a> -->
+    <div class="sidebar-sticky">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>UI Elements</span>
+            <!-- <a href="#" class="btn-icon btn-add-component"><i class="fas fa-plus-circle"></i></a> -->
 
-      <div id="add-btn-area">
-        <div class="dropdown" id="add-btn-list">
-          <a class="dropdown-toggle btn-icon" href="#" role="button" id="btn-add-element" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-plus-circle"></i>
-          </a>
+            <div id="add-btn-area">
+                <div class="dropdown" id="add-btn-list">
+                    <a class="dropdown-toggle btn-icon" href="#" role="button" id="btn-add-element" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-plus-circle"></i>
+                    </a>
 
-          <div class="dropdown-menu" aria-labelledby="btn-add-element">
-            <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" id="btn-add-component-text" href="#">Text</a>
-            <a class="dropdown-item disabled" href="#">Button</a>
-            <a class="dropdown-item" href="#" id="btn-add-component-solid">Solid color</a>
-            <a class="dropdown-item disabled" href="#">Image from url</a>
-          </div>
-        </div>
-      </div>
-    </h6>
-    <div class="px-3 no-elements d-none">Just add your first component</div>
-    <ul id="els" class="nav flex-column mb-2"></ul>
-  </div>
+                    <div class="dropdown-menu" aria-labelledby="btn-add-element">
+                        <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" id="btn-add-component-text" href="#">Text</a>
+                        <a class="dropdown-item disabled" href="#">Button</a>
+                        <a class="dropdown-item" href="#" id="btn-add-component-solid">Solid color</a>
+                        <a class="dropdown-item disabled" href="#">Image from url</a>
+                    </div>
+                </div>
+            </div>
+        </h6>
+        <div class="px-3 no-elements d-none">Just add your first component</div>
+        <ul id="els" class="nav flex-column mb-2"></ul>
+    </div>
 </nav>
+
+<script type="module">
+    'use strict';
+    import { eventDefines } from "/assets/scripts/defines.js";
+    import { defaultParent } from "/assets/scripts/app.js";
+    import { elements } from "/assets/scripts/elements.js";
+
+    let menuArea = $("#els");
+
+    $(function () {
+        $(window).on(eventDefines.elementsUpdated, renderMenu);
+    })
+
+    function renderMenu() {
+        menuArea.html("");
+        buildMenuLevel(menuArea, defaultParent);
+        applyHovers();
+        applyClicks();
+    }
+
+    function applyHovers() {
+        $(".el-item > a", menuArea).on("mouseenter", onElementHover);
+        $(".el-item", menuArea).on("mouseleave", onElementLeave);
+        $(".sidebar").on("mouseleave", onElementLeave);
+    }
+
+    function applyClicks(){
+        $("a", menuArea).on("click", (e) => $(window).trigger(eventDefines.elementsMenuClicked, $(e.target).attr("href").substr(1)));
+    }
+
+    function buildMenuLevel(menu, parentName) {
+        elements.filter(el => el.data.parent == parentName).forEach(el => {
+            let elementName = el.data.name;
+            let item = $(`<li class="nav-item el-item"><a href="#${el.id}" class="nav-link">${(elementName || 'unknown')}</a><ul class="nav flex-column ml-2"></ul></li>`);
+
+            menu.append(item);
+            if (elementName) buildMenuLevel(item.children("ul"), elementName);
+        });
+    }
+
+    function onElementHover(e) {
+        var btn = $("#add-btn-list");
+        var trg = $(e.target).closest(".el-item");
+
+        btn.addClass("detached");
+        trg.append(btn);
+    }
+
+    function onElementLeave() {
+        var btn = $("#add-btn-list");
+        btn.removeClass("detached");
+        $("#add-btn-area").append(btn);
+    }
+</script>

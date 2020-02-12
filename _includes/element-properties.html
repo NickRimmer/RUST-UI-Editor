@@ -6,11 +6,6 @@
         </button>
     </div>
     <div class="card-body">
-        <!-- <h5 class="card-title">Card title</h5> -->
-        <!-- <p class="card-text">Hello, Universe!</p> -->
-        <!-- <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a> -->
-
         <div class="form-group row">
             <label for="ui-element-name" class="col-3 col-form-label">Name</label>
             <div class="col-9"><input type="text" class="form-control" id="ui-element-name" required placeholder="Unique name of element"></div>
@@ -27,7 +22,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="according list-group row px-1" id="component-properties">
             <div class="list-group-item p-0 d-none component-item item-template">
                 <div class="component-title" data-toggle="collapse"></div>
@@ -61,3 +56,52 @@
 <div class="d-none">
     {% include components/_all-properties.html %}
 </div>
+
+<script type="module">
+    'use strict';
+    import { eventDefines } from "/assets/scripts/defines.js";
+    import { elements } from "/assets/scripts/elements.js";
+
+    let element;
+    let dialog = $("#element-properties");
+
+    $(function () {
+        $("#element-properties").draggable({ handle: ".draggable-handle", containment: "parent" });
+        
+        $(window).on(eventDefines.elementsMenuClicked, (e, id) => openProperties(id));
+
+        $("#element-properties-close").on("click", closeProperties);
+    })
+
+    function openProperties(id) {
+        element = elements.find(x => x.id === id);
+        if(!element){
+            console.warn(`Can't find element with id: ${id}`);
+            return;
+        }
+
+        setupProperties();
+        dialog.removeClass("d-none");
+
+        $(window).trigger(eventDefines.propertiesOpened);
+        /*dialog.removeClass("d-none");
+        el = elData
+        setupFields();
+        renderComponents();
+
+        fixChanges();
+        setDraggableElement(true);*/
+    }
+
+    function closeProperties(){
+        element = null;
+        dialog.addClass("d-none");
+
+        $(window).trigger(eventDefines.propertiesClosed);
+    }
+
+    function setupProperties(){
+        $("#ui-element-name", dialog).val(element.data.name);
+        $("#ui-element-parent", dialog).val(element.data.parent);
+    }
+</script>

@@ -1,6 +1,20 @@
 'use strict';
 import { config } from "./previewScreen.js";
 
+export function anchorsToPoints(aMin, aMax){
+    let min = aMin.split(" ");
+    let max = aMax.split(" ");
+
+    let result = {
+        xMin: min[0] * 1.0,
+        xMax: max[0] * 1.0,
+        yMin: min[1] * 1.0,
+        yMax: max[1] * 1.0
+    }
+
+    return result;
+}
+
 export function pointsToPixels(anchorMin, anchorMax){
     let mins = anchorMin.split(" ");
     let maxs = anchorMax.split(" ");
@@ -30,16 +44,31 @@ export function pixelsToPoints(left, bottom, width, height){
     width = width * 1.0;
     height = height * 1.0;
 
-    let xMin = round(left / x);
-    let yMin = round(bottom / y);
-    let xMax = round((left + width) / x);
-    let yMax = round((bottom + height) / y);
+    let xMin = roundPoints(left / x);
+    let yMin = roundPoints(bottom / y);
+    let xMax = roundPoints((left + width) / x);
+    let yMax = roundPoints((bottom + height) / y);
 
     var result = { xMin, yMin, xMax, yMax };
 
     return result;
 }
 
-function round(value){
+export function uColorToHex(color){
+    let parts = color.split(" ");
+    let result = "#";
+    parts.forEach(part => {
+        let dec = Math.round(part * 255);
+        let hex = dec.toString(16);
+        if(hex.length === 1) hex = "0" + hex;
+        
+        result = result + hex;
+    });
+
+    console.log(result);
+    return result;
+}
+
+function roundPoints(value){
     return Math.round(value * 1000) / 1000;
 }

@@ -1,36 +1,22 @@
 'use strict';
-import { BaseComponent } from "./base.js";
+import BaseComponent from "./base.js";
+import {uColorToHex} from "./../tools.js";
 
-export class SolidComponent extends BaseComponent {
-    constructor(data){
-        super(data, "solid-component-properties");
+export default class SolidComponent extends BaseComponent{
+    color;
+
+    constructor(color){
+        super();
+        this.color = color || "1 1 1 0.7";
     }
 
-    renderProperties(){       
-        super.renderProperties();
-        return this.configurationView;
-    }
+    renderView(parent){
+        let color = uColorToHex(this.color);
+        let html = $(`<div class="component-solid"></div>`);
 
-    renderView(el){
-        let view = $('<div class="element-render-item element-render-solid"></div>');
-        let transform = this.getTransform(el);
+        html.css("background", color);
+        parent.append(html);
 
-        if(!transform) {
-            console.warn("Solid component can't be rendered without RectTransform component");
-            return;
-        }
-
-        view.css({
-            "left": transform.left,
-            "bottom": transform.bottom,
-            "width": transform.width,
-            "height": transform.height
-        });
-
-        $("#game-screen").append(view);
-    }
-
-    save(){
-        
+        return html;
     }
 }

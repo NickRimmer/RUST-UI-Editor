@@ -8,19 +8,3 @@
 
 {% endcapture %}
 {% include modals/_template.html content=content id=id title=title hideSave=true size="modal-xl" %}
-
-<script type="module">
-    import { uiElements, jsonSpacer } from "/assets/scripts/app.js";
-    import { hideProperties } from '/assets/scripts/element-properties.js';
-
-    var dialog = $("#{{id}}");
-
-    $(function () {
-        dialog.on("show.bs.modal", onShowed);
-    })
-
-    function onShowed() {
-        hideProperties();
-        $("#exportJsonTa").val(JSON.stringify(uiElements, null, jsonSpacer));
-    }
-</script>

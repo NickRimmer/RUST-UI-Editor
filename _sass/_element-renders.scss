@@ -1,13 +1,22 @@
-.element-render-item{
-    position: absolute;
-}
+// .element-render-item{
+//     position: absolute;
+// }
 
-.element-render-solid{
-    background: #fff;
-}
+// .element-render-solid{
+//     background: #fff;
+// }
 
-.component-draggable-placeholder{
+// .component-draggable-placeholder{
+//     border: dashed 2px #ffbc00;
+//     cursor: grab;
+// }
+
+.element-container {
     position: absolute;
-    border: dashed 2px #ffbc00;
-    cursor: grab;
+
+    .component-solid{
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
 }
