@@ -26,7 +26,7 @@
         <div class="according list-group row px-1" id="component-properties">
             <div class="list-group-item p-0 component-item">
                 <div class="component-title" data-toggle="collapse"></div>
-                <a class="btn-remove" href=""><i class="fas fa-trash"></i></a>
+                <a class="btn-remove" href="#"><i class="fas fa-trash"></i></a>
                 <div class="component-properties collapse" data-parent="#component-properties"></div>
             </div>
 
@@ -121,6 +121,7 @@
                 $(".component-properties", item).html(html);
 
                 componentAddBtn.before(item);
+                $(".btn-remove", item).on("click", () => removeComponent(item));
             }
         });
 
@@ -133,5 +134,12 @@
     function addComponent(component){
         element.addComponent(component);
         setupComponents(component.id);
+    }
+
+    function removeComponent(item){
+        let id = $(".component-properties", item).prop("id");
+        element.removeComponent(id);
+        setupComponents();
+        return false;
     }
 </script>

@@ -48,4 +48,8 @@ export default class Element {
 
         $(window).trigger(eventDefines.componentAdded);
     }
+
+    removeComponent(id){
+        this.components = this.components.filter(x => x.id !== id);
+    }
 }
