@@ -7,7 +7,7 @@ import RectTransform from "./components/rect-transform.js";
 export const elements = [];
 
 export function addElement(name, parent){
-    let rectComponent = new RectTransform("0.4 0.4", "0.6 0.6");
+    let rectComponent = new RectTransform({anchormin: "0.4 0.4", anchormax: "0.6 0.6"});
 
     let data = {
         name: name || getRandomName("rnd"),

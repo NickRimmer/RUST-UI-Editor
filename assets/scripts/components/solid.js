@@ -3,15 +3,16 @@ import BaseComponent from "./base.js";
 import {uColorToHex} from "./../tools.js";
 
 export default class SolidComponent extends BaseComponent{
+    static TypeName = "UnityEngine.UI.Image";
+
     color;
 
-    constructor(color){
-        super();
-        this.color = color || "1 1 1 0.7";
+    constructor(data){
+        super(data || {color: "1 1 1 0.75"}, SolidComponent.TypeName);
     }
 
     renderView(parent){
-        let color = uColorToHex(this.color);
+        let color = uColorToHex(this.data.color);
         let html = $(`<div class="component-solid"></div>`);
 
         html.css("background", color);

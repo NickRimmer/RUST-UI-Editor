@@ -65,7 +65,6 @@ export function uColorToHex(color){
         result = result + hex;
     });
 
-    console.log(result);
     return result;
 }
 

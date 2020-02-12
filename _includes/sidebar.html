@@ -52,7 +52,10 @@
     }
 
     function applyClicks(){
-        $("a", menuArea).on("click", (e) => $(window).trigger(eventDefines.elementsMenuClicked, $(e.target).attr("href").substr(1)));
+        $("a", menuArea).on("click", e => {
+            $(window).trigger(eventDefines.elementsMenuClicked, $(e.target).attr("href").substr(1));
+            return false;
+        });
     }
 
     function buildMenuLevel(menu, parentName) {

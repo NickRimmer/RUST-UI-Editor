@@ -24,13 +24,13 @@
         </div>
 
         <div class="according list-group row px-1" id="component-properties">
-            <div class="list-group-item p-0 d-none component-item item-template">
+            <div class="list-group-item p-0 component-item">
                 <div class="component-title" data-toggle="collapse"></div>
                 <a class="btn-remove" href=""><i class="fas fa-trash"></i></a>
                 <div class="component-properties collapse" data-parent="#component-properties"></div>
             </div>
 
-            <div class="list-group-item btn-add p-0 add-template">
+            <div class="list-group-item p-0 component-add-btn">
                 <div class="component-title" data-toggle="collapse" data-target="#add-components-area">Add component <i class="fas fa-plus float-right mr-1 mt-1 text-muted" style="padding-right: 1px;"></i></div>
                 <div id="add-components-area" class="component-properties collapse text-center" data-parent="#component-properties">
                     <div class="btn-group btn-group-sm">
@@ -64,10 +64,13 @@
 
     let element;
     let dialog = $("#element-properties");
+    let componentsArea = $("#component-properties", dialog);
+    let componentTemplate = $(".component-item", componentsArea).clone();
+    let componentAddBtn = $(".component-add-btn", componentsArea);
 
     $(function () {
         $("#element-properties").draggable({ handle: ".draggable-handle", containment: "parent" });
-        
+
         $(window).on(eventDefines.elementsMenuClicked, (e, id) => openProperties(id));
 
         $("#element-properties-close").on("click", closeProperties);
@@ -75,33 +78,51 @@
 
     function openProperties(id) {
         element = elements.find(x => x.id === id);
-        if(!element){
+        if (!element) {
             console.warn(`Can't find element with id: ${id}`);
             return;
         }
 
         setupProperties();
+        setupComponents();
         dialog.removeClass("d-none");
 
         $(window).trigger(eventDefines.propertiesOpened);
-        /*dialog.removeClass("d-none");
-        el = elData
-        setupFields();
-        renderComponents();
-
-        fixChanges();
-        setDraggableElement(true);*/
     }
 
-    function closeProperties(){
+    function closeProperties() {
         element = null;
         dialog.addClass("d-none");
 
         $(window).trigger(eventDefines.propertiesClosed);
     }
 
-    function setupProperties(){
+    function setupProperties() {
         $("#ui-element-name", dialog).val(element.data.name);
         $("#ui-element-parent", dialog).val(element.data.parent);
+    }
+
+    function setupComponents() {
+        $(".component-item", componentsArea).remove();
+
+        element.data.components.forEach(component => {
+            let html = component.renderProperties();
+            if (html) {
+                let item = componentTemplate.clone();
+                let id = "component" + "_" + Math.round(Math.random() * 10000000);
+
+                $(".component-title", item).html(component.data.type);
+                $(".component-title", item).attr("data-target", "#" + id);
+                $(".component-properties", item).prop("id", id);
+                $(".component-properties", item).html(html);
+
+                componentAddBtn.before(item);
+            }
+        });
+
+        let first = componentsArea.children()[0];
+        if (first) setTimeout(() => $(".collapse", first).collapse("show"), 100);
+
+        //TODO open first component
     }
 </script>

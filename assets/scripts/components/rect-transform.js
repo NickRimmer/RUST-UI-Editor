@@ -1,28 +1,17 @@
 'use strict';
 import BaseComponent from "./base.js";
-import {anchorsToPoints, pointsToPixels} from "../tools.js";
+import {pointsToPixels} from "../tools.js";
 
 export default class RectTransform extends BaseComponent{
-    transform = {
-        xMin: 0,
-        xMax: 1,
-        yMin: 0,
-        yMax: 1
-    };
+    static TypeName = "RectTransform";
 
-    aMin = "0 0";
-    aMax = "1 1";
-
-    constructor(aMin, aMax){
-        super();
-        this.transform = anchorsToPoints(aMin, aMax);
-        this.aMin = aMin;
-        this.aMax = aMax;
+    constructor(data){
+        super(data || {anchormin: "0.4 0.4", anchormax: "0.6 0.6"}, RectTransform.TypeName);
     }
 
     renderView(parent, element){
         let elementId = `element-${element.id}`;
-        let px = pointsToPixels(this.aMin, this.aMax);
+        let px = pointsToPixels(this.data.anchormin, this.data.anchormax);
         let html = $(`<div id="${elementId}" class="element-container"></div>`);
         html.css({
             left: px.left,
@@ -31,8 +20,10 @@ export default class RectTransform extends BaseComponent{
             height: px.height
         });
 
-        $(`#${elementId}`, parent).remove();
-        $(parent).append(html)
+        if(parent){
+            $(`#${elementId}`, parent).remove();
+            $(parent).append(html)
+        }
 
         return html;
     }
