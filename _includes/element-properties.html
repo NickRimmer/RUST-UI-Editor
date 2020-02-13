@@ -74,6 +74,7 @@
         $("#element-properties").draggable({ handle: ".draggable-handle", containment: "parent" });
 
         $(window).on(eventDefines.elementsMenuClicked, (e, id) => openProperties(id));
+        $(window).on(eventDefines.modalOpened, closeProperties);
 
         $("#element-properties-close").on("click", closeProperties);
         $("#btn-add-component-rect", componentAddBtn).on("click", () => addComponent(new RectTransform()));

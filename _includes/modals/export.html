@@ -8,3 +8,23 @@
 
 {% endcapture %}
 {% include modals/_template.html content=content id=id title=title hideSave=true size="modal-xl" %}
+
+<script type="module">
+    'use strict';
+    import {elements} from "/assets/scripts/elements.js"
+    import {jsonSpacer} from "/assets/scripts/app.js"
+
+    $(function(){
+        let result = [];
+        elements.forEach(element => {
+            let components = element.components.map(component => component.data);
+            let data = element.data;
+            data.components = components;
+
+            result.push(data);
+        });
+
+        let json = JSON.stringify(result, null, jsonSpacer);
+        $("#exportJsonTa").val(json);
+    })
+</script>

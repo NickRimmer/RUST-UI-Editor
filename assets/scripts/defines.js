@@ -11,4 +11,7 @@ export const eventDefines = {
 
     propertiesOpened: "properties.opened",
     propertiesClosed: "properties.closed",
+
+    modalOpened: "modal.opened",
+    modalClosed: "modal.closed",
 }

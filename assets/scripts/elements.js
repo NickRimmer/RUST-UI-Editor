@@ -22,6 +22,23 @@ export function addElement(name, parent){
     return element;
 }
 
+export function removeElement(id){
+    let element = elements.find(x=>x.id === id);
+    if(!element){
+        console.warn("Element wasn't removed, cause not found");
+        return;
+    }
+
+    removeElementInner(element);
+}
+
+function removeElementInner(element){
+    let children = element.filter(x=>x.data.parent == element.data.name);
+    children.forEach(child => removeElement(child));
+
+    elements = elements.filter(x=>x.id !== element.id);
+}
+
 function getRandomName(prefix){
     return prefix + "-" + Date.now();
 }
