@@ -13,6 +13,7 @@
 
 .element-container {
     position: absolute;
+    pointer-events: none;
 
     .component-solid{
         display: inline-block;
@@ -27,5 +28,6 @@
     &.element-temp{
         border: dashed 1px #ffbc00;
         cursor: grab;
+        pointer-events: all;
     }
 }

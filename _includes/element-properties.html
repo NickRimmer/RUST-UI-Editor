@@ -92,17 +92,11 @@
         }
 
         element = new ElementTemp(elementOriginal);
-        rect = element.renderView();
-        
-        rect.draggable({ 
-            containment: "parent",
-            drag: onElementDrag
-        });
-
         return true;
     }
 
     function openProperties(id) {
+        if(element) cleanUp();
         if(!createTemp(id)) return;
 
         setupProperties();
@@ -113,11 +107,7 @@
     }
 
     function closeProperties() {
-        if(!element) return;
-
-        element.restoreView();
-        element = null;
-        rect = null;
+        cleanUp();
 
         dialog.addClass("d-none");
         $(window).trigger(eventDefines.propertiesClosed);
@@ -126,6 +116,14 @@
     function saveProperties() {
         element.apply(true);
         closeProperties();
+    }
+
+    function cleanUp(){
+        if(!element) return;
+
+        element.restoreView();
+        element = null;
+        rect = null;
     }
 
     function setupProperties() {
@@ -156,6 +154,7 @@
 
         let componentView = $(`[id=${idToOpen}]`, componentsArea);
         if (componentView) setTimeout(() => componentView.collapse("show"), 100);
+        renderView();
     }
 
     function addComponent(component) {
@@ -182,5 +181,13 @@
 
         rectComponent.setSizePx(left, bottom, rect.outerWidth(true), rect.outerHeight(true));
         //TODO update property view
+    }
+
+    function renderView(){
+        rect = element.renderView();
+        rect.draggable({ 
+            containment: "parent",
+            drag: onElementDrag
+        });
     }
 </script>
