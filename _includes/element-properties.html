@@ -49,7 +49,7 @@
         <button type="button" id="element-properties-remove" class="btn btn-danger float-left"><i class="fas fa-trash"></i></button>
 
         <!-- <button title="Add component" type="button" id="element-properties-add-component" class="btn btn-secondary"><i class="fas fa-plus-circle"></i></button> -->
-        <button type="submit" id="element-properties-save" class="btn btn-primary" disabled>Save changes</button>
+        <button type="submit" id="element-properties-save" class="btn btn-primary">Save changes</button>
     </div>
 </form>
 
@@ -61,10 +61,12 @@
     'use strict';
     import { eventDefines } from "/assets/scripts/defines.js";
     import { elements } from "/assets/scripts/elements.js";
+    import { ElementTemp } from "/assets/scripts/element.js";
     import RectTransform from "/assets/scripts/components/rect-transform.js";
     import SolidComponent from "/assets/scripts/components/solid.js";
 
     let element;
+    let rect;
     let dialog = $("#element-properties");
     let componentsArea = $("#component-properties", dialog);
     let componentTemplate = $(".component-item", componentsArea).clone();
@@ -76,17 +78,32 @@
         $(window).on(eventDefines.elementsMenuClicked, (e, id) => openProperties(id));
         $(window).on(eventDefines.modalOpened, closeProperties);
 
-        $("#element-properties-close").on("click", closeProperties);
+        dialog.on("submit", () => { saveProperties(); return false; });
+        $("#element-properties-close", dialog).on("click", closeProperties);
         $("#btn-add-component-rect", componentAddBtn).on("click", () => addComponent(new RectTransform()));
         $("#btn-add-component-solid", componentAddBtn).on("click", () => addComponent(new SolidComponent()));
     })
 
-    function openProperties(id) {
-        element = elements.find(x => x.id === id);
-        if (!element) {
+    function createTemp(id){
+        let elementOriginal = elements.find(x => x.id === id);
+        if (!elementOriginal) {
             console.warn(`Can't find element with id: ${id}`);
-            return;
+            return false;
         }
+
+        element = new ElementTemp(elementOriginal);
+        rect = element.renderView();
+        
+        rect.draggable({ 
+            containment: "parent",
+            drag: onElementDrag
+        });
+
+        return true;
+    }
+
+    function openProperties(id) {
+        if(!createTemp(id)) return;
 
         setupProperties();
         setupComponents();
@@ -96,10 +113,19 @@
     }
 
     function closeProperties() {
-        element = null;
-        dialog.addClass("d-none");
+        if(!element) return;
 
+        element.restoreView();
+        element = null;
+        rect = null;
+
+        dialog.addClass("d-none");
         $(window).trigger(eventDefines.propertiesClosed);
+    }
+
+    function saveProperties() {
+        element.apply(true);
+        closeProperties();
     }
 
     function setupProperties() {
@@ -109,7 +135,7 @@
 
     function setupComponents(idToOpen) {
         $(".component-item", componentsArea).remove();
-        if(element.components.length === 0) return;
+        if (element.components.length === 0) return;
 
         element.components.forEach(component => {
             let html = component.renderProperties();
@@ -126,21 +152,35 @@
             }
         });
 
-        if(!idToOpen) idToOpen = element.components[0].id;
+        if (!idToOpen) idToOpen = element.components[0].id;
 
         let componentView = $(`[id=${idToOpen}]`, componentsArea);
         if (componentView) setTimeout(() => componentView.collapse("show"), 100);
     }
 
-    function addComponent(component){
+    function addComponent(component) {
         element.addComponent(component);
         setupComponents(component.id);
     }
 
-    function removeComponent(item){
+    function removeComponent(item) {
         let id = $(".component-properties", item).prop("id");
         element.removeComponent(id);
         setupComponents();
         return false;
+    }
+
+    function onElementDrag(){
+        let rectComponent = element.components.find(x => x instanceof RectTransform);
+        if(!rectComponent){
+            console.warn("Rect component not found")
+            return;
+        }
+
+        let left = rect.position().left;
+        let bottom = rect.parent().outerHeight(true) - rect.position().top - rect.outerHeight(true);
+
+        rectComponent.setSizePx(left, bottom, rect.outerWidth(true), rect.outerHeight(true));
+        //TODO update property view
     }
 </script>

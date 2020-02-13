@@ -23,4 +23,9 @@
         left: 0;
         top: 0;
     }
+
+    &.element-temp{
+        border: dashed 1px #ffbc00;
+        cursor: grab;
+    }
 }

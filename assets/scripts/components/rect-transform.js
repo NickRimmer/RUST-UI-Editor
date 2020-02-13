@@ -1,6 +1,6 @@
 'use strict';
 import BaseComponent from "./base.js";
-import {pointsToPixels} from "../tools.js";
+import {pointsToPixels, pixelsToPoints} from "../tools.js";
 
 export default class RectTransform extends BaseComponent{
     static TypeName = "RectTransform";
@@ -10,7 +10,7 @@ export default class RectTransform extends BaseComponent{
     }
 
     renderView(parent, element){
-        let elementId = `element-${element.id}`;
+        let elementId = element.id;
         let px = pointsToPixels(this.data.anchormin, this.data.anchormax);
         let html = $(`<div id="${elementId}" class="element-container"></div>`);
         html.css({
@@ -26,5 +26,13 @@ export default class RectTransform extends BaseComponent{
         }
 
         return html;
+    }
+
+    setSizePx(left, bottom, width, height){
+        let points = pixelsToPoints(left, bottom, width, height);
+        this.data.anchormin = `${points.xMin} ${points.yMin}`;
+        this.data.anchormax = `${points.xMax} ${points.yMax}`;
+
+        return this.data;
     }
 }

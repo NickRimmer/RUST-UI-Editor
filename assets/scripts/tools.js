@@ -68,6 +68,17 @@ export function uColorToHex(color){
     return result;
 }
 
+export function deepClone(obj){
+    if(!obj) return obj;
+    if(!(obj instanceof Object)) return obj;
+
+    let result = Object.assign(Object.create(obj), obj);
+    for (let prop in obj)
+        result[prop] = deepClone(obj[prop]);
+
+    return result;
+}
+
 function roundPoints(value){
     return Math.round(value * 1000) / 1000;
 }

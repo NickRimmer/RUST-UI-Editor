@@ -16,7 +16,7 @@ export default class BaseComponent{
 
     renderProperties(parent){
         console.warn("Component render properties not implemented");
-        console.log(this);
+        //console.log(this);
 
         let html = $(`<div>Not implemented properties</div>`)
         if(parent) parent.append(html);
