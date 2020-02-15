@@ -11,6 +11,7 @@
             <div class="col-9"><input type="text" class="form-control" id="ui-element-name" required placeholder="Unique name of element"></div>
         </div>
 
+        <!--
         <div class="form-group row">
             <label for="ui-element-parent" class="col-3 col-form-label">Parent</label>
             <div class="col-9">
@@ -22,6 +23,7 @@
                 </div>
             </div>
         </div>
+        -->
 
         <div class="according list-group row px-1" id="component-properties">
             <div class="list-group-item p-0 component-item">
@@ -64,6 +66,7 @@
     import { ElementTemp } from "/assets/scripts/element.js";
     import RectTransform from "/assets/scripts/components/rect-transform.js";
     import SolidComponent from "/assets/scripts/components/solid.js";
+    import {defaultParent} from "/assets/scripts/app.js";
 
     let element;
     let rect;
@@ -115,7 +118,27 @@
     }
 
     function saveProperties() {
+        let name = $("#ui-element-name", dialog).val();
+        //let parent = $("#ui-element-parent", dialog).val();
+
+        if(element.data.name !== name && elements.find(x => x.data.name === name)){
+            console.warn(`name '${name}' already used`);
+            return;
+        }
+
+        /*if(name === parent){
+            console.warn("parent can't be equal name");
+            return;
+        }
+
+        if(parent !== defaultParent && !elements.find(x=>x.data.name === parent)){
+            console.warn("parent not found");
+            return;
+        }*/
+
+        element.data.name = name;
         element.apply(true);
+        $(window).trigger(eventDefines.elementsUpdated, element.original);
         closeProperties();
     }
 

@@ -103,6 +103,13 @@ export class ElementTemp extends Element {
     }
 
     apply(updateView) {
+        // update parents
+        if(this.data.name !== this.original.data.name){
+            elements
+                .filter(x => x.data.parent === this.original.data.name)
+                .forEach(x => x.data.parent = this.data.name);
+        }
+
         // hide properties
         let id = this.id;
         delete this.id;
