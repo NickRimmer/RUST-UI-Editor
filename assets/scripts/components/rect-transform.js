@@ -23,7 +23,8 @@ export default class RectTransform extends BaseComponent {
 
     renderProperties(parent) {
         var html = $("#rect-transform-component-properties").clone();
-        html.prop("id", this.id);
+        html.removeAttr("id");
+        //html.prop("id", this.id);
 
         $("#transform-left", html).on("keyup", () => { this.setTransformFromFields(); this.updateView() });
         $("#transform-bottom", html).on("keyup", () => { this.setTransformFromFields(); this.updateView() });
