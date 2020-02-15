@@ -163,19 +163,16 @@
         if (element.components.length === 0) return;
 
         element.components.forEach(component => {
-            let html = component.renderProperties();
-            if (html) {
-                let item = componentTemplate.clone();
+            let item = componentTemplate.clone();
+            $(".component-title", item).html(component.data.type);
+            $(".component-title", item).attr("data-target", "#" + component.id);
+            $(".component-properties", item).prop("id", component.id);
+            componentAddBtn.before(item);
 
-                $(".component-title", item).html(component.data.type);
-                $(".component-title", item).attr("data-target", "#" + component.id);
-                $(".component-properties", item).prop("id", component.id);
-                $(".component-properties", item).html(html);
-
-                componentAddBtn.before(item);
-                if(component instanceof RectTransform) $(".btn-remove", item).remove();
-                else $(".btn-remove", item).on("click", () => removeComponent(item));
-            }
+            component.renderProperties($(".component-properties", item));
+            
+            if(component instanceof RectTransform) $(".btn-remove", item).remove();
+            else $(".btn-remove", item).on("click", () => removeComponent(item));
         });
 
         if (!idToOpen) idToOpen = element.components[0].id;

@@ -42,8 +42,6 @@ export default class RectTransform extends BaseComponent {
         let parentHtml = $(`#${this.elementId},[id-original=${this.elementId}]`).parent();
         let px = pointsToPixels(this.data.anchormin, this.data.anchormax, parentHtml);
 
-        console.log(parentHtml);
-
         $("#transform-left", html).val(px.left);
         $("#transform-bottom", html).val(px.bottom);
         $("#transform-width", html).val(px.width);

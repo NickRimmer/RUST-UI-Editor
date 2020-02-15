@@ -25,7 +25,33 @@ export default class SolidComponent extends BaseComponent{
         var html = $("#solid-component-properties").clone();
         html.removeAttr("id");
 
-        if(parent) parent.append(html);
+        if(parent) {
+            parent.append(html);
+
+            let picker = Pickr.create({
+                el: $('#solid-color', html)[0],
+                theme: 'monolith',
+                components:{
+                    // Main components
+                    preview: true,
+                    opacity: true,
+                    hue: true,
+    
+                    // Input / output Options
+                    interaction: {
+                        input: true,
+                        //hex: true,
+                        //rgba: true,
+                        save: true
+                    }
+                }
+            });
+
+            picker.on("save", (color, instance) => {
+                picker.hide();
+                console.log(color);
+            })
+        }
         return html;
     }
 }
