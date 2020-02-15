@@ -4,7 +4,7 @@ import {eventDefines} from "./defines.js";
 import Element from "./element.js";
 import RectTransform from "./components/rect-transform.js";
 
-export const elements = [];
+export let elements = [];
 
 export function addElement(name, parent){
     let rectComponent = new RectTransform({anchormin: "0.4 0.4", anchormax: "0.6 0.6"});
@@ -49,8 +49,8 @@ export function removeElement(id){
 }
 
 function removeElementInner(element){
-    let children = element.filter(x=>x.data.parent == element.data.name);
-    children.forEach(child => removeElement(child));
+    let children = elements.filter(x=>x.data.parent == element.data.name);
+    children.forEach(child => removeElementInner(child));
 
     elements = elements.filter(x=>x.id !== element.id);
 }

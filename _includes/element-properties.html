@@ -62,7 +62,7 @@
 <script type="module">
     'use strict';
     import { eventDefines } from "/assets/scripts/defines.js";
-    import { elements, updateViews } from "/assets/scripts/elements.js";
+    import { elements, updateViews, removeElement } from "/assets/scripts/elements.js";
     import { ElementTemp } from "/assets/scripts/element.js";
     import RectTransform from "/assets/scripts/components/rect-transform.js";
     import SolidComponent from "/assets/scripts/components/solid.js";
@@ -83,6 +83,7 @@
 
         dialog.on("submit", () => { saveProperties(); return false; });
         $("#element-properties-close", dialog).on("click", closeProperties);
+        $("#element-properties-remove", dialog).on("click", onRemoveElementClicked);
         $("#btn-add-component-rect", componentAddBtn).on("click", () => addComponent(new RectTransform()));
         $("#btn-add-component-solid", componentAddBtn).on("click", () => addComponent(new SolidComponent()));
     })
@@ -221,5 +222,12 @@
         });
 
         updateViews(element.data.name);
+    }
+
+    function onRemoveElementClicked(){
+        let name = element.original.id;
+        removeElement(name);
+        closeProperties();
+        $(window).trigger(eventDefines.elementsUpdated, elements);
     }
 </script>
