@@ -20,10 +20,6 @@ export default class Element {
         }
     }
 
-    getDataJson() {
-        return JSON.stringify(data);
-    }
-
     renderView(parent) {
         parent = parent || this.data.parent;
         //console.log(`render: ${this.data.name}; parent: ${parent}`);
