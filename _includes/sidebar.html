@@ -66,8 +66,12 @@
     }
 
     function createElement(name, component){
-        let parentId = $("#add-btn-list").closest("li").find("a").attr("href").substr(1);
-        let parentName = elements.find(x => x.id === parentId).data.name;
+        let parentName = defaultParent;
+        if($("#add-btn-list").is(".detached")){
+            let parentId = $("#add-btn-list").closest("li").find("a").attr("href").substr(1);
+            parentName = elements.find(x => x.id === parentId).data.name;
+        }
+        
         onElementLeave();
 
         let element = addElement(name + "-" + Math.round(Math.random() * 1000000000), parentName);
