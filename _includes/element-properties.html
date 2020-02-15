@@ -176,10 +176,12 @@
             return;
         }
 
-        let left = rect.position().left;
-        let bottom = rect.parent().outerHeight(true) - rect.position().top - rect.outerHeight(true);
+        // let left = rect.position().left;
+        // let bottom = rect.parent().outerHeight(true) - rect.position().top - rect.outerHeight(true);
 
-        rectComponent.setSizePx(left, bottom, rect.outerWidth(true), rect.outerHeight(true), rect.parent());
+        //rectComponent.setSizePx(left, bottom, rect.outerWidth(true), rect.outerHeight(true));
+        rectComponent.setTransformFromRect();
+        rectComponent.updatePropertiesView();
         //TODO update property view
     }
 
@@ -187,7 +189,8 @@
         rect = element.renderView();
         rect.draggable({ 
             containment: "#game-screen",
-            drag: onElementDrag,
+            //drag: onElementDrag,
+            stop: onElementDrag,
             snap: ".element-container",
             snapTolerance: 5
         });

@@ -14,7 +14,10 @@ export default class Element {
         this.data = data;
         this.id = ["element", Date.now(), Math.round(Math.random() * 1000)].join("_");
 
-        if (component) this.components.push(component);
+        if (component) {
+            component.elementId = this.id;
+            this.components.push(component);
+        }
     }
 
     getDataJson() {
@@ -34,7 +37,7 @@ export default class Element {
 
         this.components
             .filter(component => !(component instanceof RectTransform))
-            .forEach(component => component.renderView(rect, this));
+            .forEach(component => component.renderView(rect));
 
         return rect;
     }
@@ -53,15 +56,17 @@ export default class Element {
             ? $("#game-screen")
             : $(`#${parentElement.id},[id-original=${parentElement.id}]`);
 
-        let html = rect.renderView(parentObject, this);
+        let html = rect.renderView(parentObject);
         return html;
     }
 
     addComponent(component) {
+        component.elementId = this.id;
+
         this.components.push(component);
         this.renderView();
 
-        $(window).trigger(eventDefines.componentAdded);
+        $(window).trigger(eventDefines.componentAdded, component);
     }
 
     removeComponent(id) {

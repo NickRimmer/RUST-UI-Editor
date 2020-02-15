@@ -2,6 +2,7 @@
 
 export default class BaseComponent{
     data;
+    elementId;
 
     constructor(data, type){
         this.data = data;
@@ -9,7 +10,7 @@ export default class BaseComponent{
         this.id = ["component", Date.now(), Math.round(Math.random() * 1000)].join("_");
     }
 
-    renderView(parent, element){
+    renderView(parent){
         console.warn("Component render view not implemented");
         console.log(this);
     }
