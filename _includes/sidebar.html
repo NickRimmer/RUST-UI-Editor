@@ -30,7 +30,9 @@
     'use strict';
     import { eventDefines } from "/assets/scripts/defines.js";
     import { defaultParent } from "/assets/scripts/app.js";
-    import { elements, addElement } from "/assets/scripts/elements.js";
+    import { elements, addElement, updateViews } from "/assets/scripts/elements.js";
+
+    import SolidComponent from "/assets/scripts/components/solid.js";
 
     let menuArea = $("#els");
     let lastHoveredItem;
@@ -40,7 +42,7 @@
 
         $("#btn-add-component-panel").on("click", () => createElement("panel"));
         //$("#btn-add-component-text").on("click", () => createElement("text"));
-        //$("#btn-add-component-solid").on("click", () => createElement("solid"));
+        $("#btn-add-component-solid").on("click", () => createElement("solid", new SolidComponent()));
     })
 
     function renderMenu() {
@@ -64,12 +66,15 @@
     }
 
     function createElement(name, component){
-        let id = $("#add-btn-list").closest("li").find("a").attr("href").substr(1);
-        let parentName = elements.find(x => x.id === id).data.name;
+        let parentId = $("#add-btn-list").closest("li").find("a").attr("href").substr(1);
+        let parentName = elements.find(x => x.id === parentId).data.name;
         onElementLeave();
 
-        addElement(name + "-" + Math.round(Math.random() * 1000000000), parentName);
+        let element = addElement(name + "-" + Math.round(Math.random() * 1000000000), parentName);
+        if(component) element.addComponent(component);
 
+        updateViews();
+        $(window).trigger(eventDefines.elementsAdded, element.id);
         return false;
     }
 

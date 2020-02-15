@@ -79,6 +79,7 @@
         $("#element-properties").draggable({ handle: ".draggable-handle", containment: "parent" });
 
         $(window).on(eventDefines.elementsMenuClicked, (e, id) => openProperties(id));
+        $(window).on(eventDefines.elementsAdded, (e, id) => openProperties(id));
         $(window).on(eventDefines.modalOpened, closeProperties);
 
         dialog.on("submit", () => { saveProperties(); return false; });

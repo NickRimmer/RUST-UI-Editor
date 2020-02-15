@@ -24,7 +24,6 @@ export default class RectTransform extends BaseComponent {
     renderProperties(parent) {
         var html = $("#rect-transform-component-properties").clone();
         html.removeAttr("id");
-        //html.prop("id", this.id);
 
         $("#transform-left", html).on("keyup", () => { this.setTransformFromFields(); this.updateView() });
         $("#transform-bottom", html).on("keyup", () => { this.setTransformFromFields(); this.updateView() });
@@ -42,6 +41,9 @@ export default class RectTransform extends BaseComponent {
 
         let parentHtml = $(`#${this.elementId},[id-original=${this.elementId}]`).parent();
         let px = pointsToPixels(this.data.anchormin, this.data.anchormax, parentHtml);
+
+        console.log(parentHtml);
+
         $("#transform-left", html).val(px.left);
         $("#transform-bottom", html).val(px.bottom);
         $("#transform-width", html).val(px.width);
