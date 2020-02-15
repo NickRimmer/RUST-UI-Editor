@@ -1,6 +1,6 @@
 'use strict';
 
-export function anchorsToPoints(aMin, aMax){
+export function anchorsToPoints(aMin, aMax) {
     let min = aMin.split(" ");
     let max = aMax.split(" ");
 
@@ -14,10 +14,10 @@ export function anchorsToPoints(aMin, aMax){
     return result;
 }
 
-export function pointsToPixels(anchorMin, anchorMax, parent){
+export function pointsToPixels(anchorMin, anchorMax, parent) {
     let mins = anchorMin.split(" ");
     let maxs = anchorMax.split(" ");
-        
+
     let xMin = mins[0] * 1.0;
     let xMax = maxs[0] * 1.0;
     let yMin = mins[1] * 1.0;
@@ -34,7 +34,7 @@ export function pointsToPixels(anchorMin, anchorMax, parent){
     return { left, bottom, width, height };
 }
 
-export function pixelsToPoints(left, bottom, width, height, parent){
+export function pixelsToPoints(left, bottom, width, height, parent) {
     let x = parent.width() * 1.0;
     let y = parent.height() * 1.0;
 
@@ -53,23 +53,40 @@ export function pixelsToPoints(left, bottom, width, height, parent){
     return result;
 }
 
-export function uColorToHex(color){
+export function uColorToHex(color) {
     let parts = color.split(" ");
     let result = "#";
     parts.forEach(part => {
         let dec = Math.round(part * 255);
         let hex = dec.toString(16);
-        if(hex.length === 1) hex = "0" + hex;
-        
+        if (hex.length === 1) hex = "0" + hex;
+
         result = result + hex;
     });
 
     return result;
 }
 
-export function deepClone(obj){
-    if(!obj) return obj;
-    if(!(obj instanceof Object)) return obj;
+export function hexToUColor(color) {
+    if (color.startsWith("#")) color = color.substr(1);
+    if (color.length == 6) color = color + "ff";
+
+    let r = parseInt("0x" + color.substr(0, 2)) / 255.0;
+    let g = parseInt("0x" + color.substr(2, 2)) / 255.0;
+    let b = parseInt("0x" + color.substr(4, 2)) / 255.0;
+    let a = parseInt("0x" + color.substr(6, 2)) / 255.0;
+
+    r = Math.round(r * 1000) / 1000;
+    g = Math.round(g * 1000) / 1000;
+    b = Math.round(b * 1000) / 1000;
+    a = Math.round(a * 1000) / 1000;
+
+    return `${r} ${g} ${b} ${a}`;
+}
+
+export function deepClone(obj) {
+    if (!obj) return obj;
+    if (!(obj instanceof Object)) return obj;
 
     let result = Object.assign(Object.create(obj), obj);
     for (let prop in obj)
@@ -78,7 +95,7 @@ export function deepClone(obj){
     return result;
 }
 
-function roundPoints(value){
+function roundPoints(value) {
     return Math.round(value * 1000) / 1000;
     return value;
 }

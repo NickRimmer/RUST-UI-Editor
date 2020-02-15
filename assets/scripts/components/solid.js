@@ -1,6 +1,6 @@
 'use strict';
 import BaseComponent from "./base.js";
-import {uColorToHex} from "./../tools.js";
+import {uColorToHex, hexToUColor} from "./../tools.js";
 
 export default class SolidComponent extends BaseComponent{
     static TypeName = "UnityEngine.UI.Image";
@@ -16,6 +16,7 @@ export default class SolidComponent extends BaseComponent{
         let html = $(`<div class="component-solid"></div>`);
 
         html.css("background", color);
+        html.prop("id", this.id);
         parent.append(html);
 
         return html;
@@ -27,10 +28,12 @@ export default class SolidComponent extends BaseComponent{
 
         if(parent) {
             parent.append(html);
-
+            
+            let color = uColorToHex(this.data.color);
             let picker = Pickr.create({
                 el: $('#solid-color', html)[0],
                 theme: 'monolith',
+                default: color,
                 components:{
                     // Main components
                     preview: true,
@@ -42,15 +45,24 @@ export default class SolidComponent extends BaseComponent{
                         input: true,
                         //hex: true,
                         //rgba: true,
-                        save: true
+                        save: true,
+                        //cancel: true
                     }
+                },
+                strings: {
+                    cancel: "Reset"
                 }
             });
 
             picker.on("save", (color, instance) => {
                 picker.hide();
-                console.log(color);
-            })
+                let hex = color.toHEXA().toString();
+                let result = hexToUColor(hex);
+                this.data.color = result;
+
+                let html = $(`#${this.id}`);
+                html.css("background", hex);
+            });
         }
         return html;
     }

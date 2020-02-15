@@ -6,7 +6,7 @@ import RectTransform from "./components/rect-transform.js";
 
 export let elements = [];
 
-export function addElement(name, parent){
+export function addElement(name, parent, silent){
     let rectComponent = new RectTransform({anchormin: "0.4 0.4", anchormax: "0.6 0.6"});
     let data = {
         name: name || getRandomName("rnd"),
@@ -18,8 +18,11 @@ export function addElement(name, parent){
     
     //updateViews();
 
-    $(window).trigger(eventDefines.elementsAdded, element);
-    $(window).trigger(eventDefines.elementsUpdated, elements);
+    if(!silent){
+        $(window).trigger(eventDefines.elementsAdded, element.id);
+        $(window).trigger(eventDefines.elementsUpdated, elements);
+    }
+    
     return element;
 }
 
