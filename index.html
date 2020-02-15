@@ -4,15 +4,22 @@
 <div id="game-screen"></div>
 
 <script type="module">
-    import { addElement, elements } from "./assets/scripts/elements.js"
+    import { addElement, elements, updateViews } from "./assets/scripts/elements.js"
     import SolidComponent from "./assets/scripts/components/solid.js"
 
     $(function(){
-        let first = addElement("test-1");
-        addElement("test-2");
-        addElement("sub-1", first.data.name);
+        setTimeout(() => {
+            let first = addElement("test-1");
+            addElement("test-2");
+            let sub = addElement("sub-1", first.data.name);
 
-        let solid = new SolidComponent();
-        first.addComponent(solid);
+            let solid2 = new SolidComponent();
+            sub.addComponent(solid2);
+
+            let solid = new SolidComponent();
+            first.addComponent(solid);
+
+            updateViews();
+        }, 1000);
     })
 </script>

@@ -16,10 +16,26 @@ export function addElement(name, parent){
     let element = new Element(data, rectComponent);
     elements.push(element);
     
-    element.renderView();
+    //updateViews();
+
     $(window).trigger(eventDefines.elementsAdded, element);
     $(window).trigger(eventDefines.elementsUpdated, elements);
     return element;
+}
+
+export function updateViews(parent){
+    parent = parent || defaultParent;
+
+    if(parent == defaultParent){
+        $("#game-screen").html("");
+    }
+
+    elements
+        .filter(x => x.data.parent === parent)
+        .forEach(element => {
+            element.renderView(parent);
+            updateViews(element.data.name);
+        });
 }
 
 export function removeElement(id){

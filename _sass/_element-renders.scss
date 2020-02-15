@@ -26,8 +26,18 @@
     }
 
     &.element-temp{
-        border: dashed 1px #ffbc00;
         cursor: grab;
         pointer-events: all;
+
+        &:after{
+            content: "";
+            border: dashed 1px #ffbc00;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            //margin: -2px;
+        }
     }
 }

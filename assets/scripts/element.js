@@ -1,7 +1,9 @@
 'use strict';
 import RectTransform from "./components/rect-transform.js";
 import {deepClone} from "./tools.js";
-import { eventDefines } from "./defines.js";
+import {eventDefines} from "./defines.js";
+import {defaultParent} from "./app.js";
+import {elements, updateViews} from "./elements.js";
 
 export default class Element {
     data;
@@ -19,8 +21,11 @@ export default class Element {
         return JSON.stringify(data);
     }
 
-    renderView() {
-        let rect = this.renderRect();
+    renderView(parent) {
+        parent = parent || this.data.parent;
+        //console.log(`render: ${this.data.name}; parent: ${parent}`);
+
+        let rect = this.renderRect(parent);
         if (!rect) {
             console.warn("Element doesn't contains Rect component");
             console.log(this);
@@ -34,14 +39,21 @@ export default class Element {
         return rect;
     }
 
-    renderRect() {
+    renderRect(parent) {
+        parent = parent || this.data.parent;
+        
         let rect = this.components.find(component => component instanceof RectTransform);
         if (!rect) {
             console.warn("Element not rendered cause there is no rect data");
             return;
         }
 
-        var html = rect.renderView($("#game-screen"), this);
+        let parentElement = elements.find(x => x.data.name === parent);
+        let parentObject = (!parentElement)
+            ? $("#game-screen")
+            : $(`#${parentElement.id},[id-original=${parentElement.id}]`);
+
+        let html = rect.renderView(parentObject, this);
         return html;
     }
 
@@ -74,9 +86,10 @@ export class ElementTemp extends Element {
         this.id = `${this.original.id}-temp`;
     }
 
-    renderView() {
-        let rect = super.renderView();
+    renderView(parent) {
+        let rect = super.renderView(parent);
         rect.addClass("element-temp");
+        rect.attr("id-original", this.original.id);
         $(`#${this.original.id}`).replaceWith(rect);
 
         return rect;
@@ -85,6 +98,7 @@ export class ElementTemp extends Element {
     restoreView() {
         let rect = this.original.renderView();
         $(`#${this.id}`).replaceWith(rect);
+        updateViews(this.original.data.name);
     }
 
     apply(updateView) {

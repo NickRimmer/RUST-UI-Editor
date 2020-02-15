@@ -1,5 +1,4 @@
 'use strict';
-import { config } from "./previewScreen.js";
 
 export function anchorsToPoints(aMin, aMax){
     let min = aMin.split(" ");
@@ -15,7 +14,7 @@ export function anchorsToPoints(aMin, aMax){
     return result;
 }
 
-export function pointsToPixels(anchorMin, anchorMax){
+export function pointsToPixels(anchorMin, anchorMax, parent){
     let mins = anchorMin.split(" ");
     let maxs = anchorMax.split(" ");
         
@@ -24,8 +23,8 @@ export function pointsToPixels(anchorMin, anchorMax){
     let yMin = mins[1] * 1.0;
     let yMax = maxs[1] * 1.0;
 
-    let x = config.width * 1.0;
-    let y = config.height * 1.0;
+    let x = parent.width() * 1.0;
+    let y = parent.height() * 1.0;
 
     var left = Math.round(x * xMin);
     var bottom = Math.round(y * yMin);
@@ -35,9 +34,9 @@ export function pointsToPixels(anchorMin, anchorMax){
     return { left, bottom, width, height };
 }
 
-export function pixelsToPoints(left, bottom, width, height){
-    let x = config.width * 1.0;
-    let y = config.height * 1.0;
+export function pixelsToPoints(left, bottom, width, height, parent){
+    let x = parent.width() * 1.0;
+    let y = parent.height() * 1.0;
 
     left = left * 1.0;
     bottom = bottom * 1.0;

@@ -60,7 +60,7 @@
 <script type="module">
     'use strict';
     import { eventDefines } from "/assets/scripts/defines.js";
-    import { elements } from "/assets/scripts/elements.js";
+    import { elements, updateViews } from "/assets/scripts/elements.js";
     import { ElementTemp } from "/assets/scripts/element.js";
     import RectTransform from "/assets/scripts/components/rect-transform.js";
     import SolidComponent from "/assets/scripts/components/solid.js";
@@ -101,6 +101,7 @@
 
         setupProperties();
         setupComponents();
+        renderView();
         dialog.removeClass("d-none");
 
         $(window).trigger(eventDefines.propertiesOpened);
@@ -154,7 +155,6 @@
 
         let componentView = $(`[id=${idToOpen}]`, componentsArea);
         if (componentView) setTimeout(() => componentView.collapse("show"), 100);
-        renderView();
     }
 
     function addComponent(component) {
@@ -179,15 +179,17 @@
         let left = rect.position().left;
         let bottom = rect.parent().outerHeight(true) - rect.position().top - rect.outerHeight(true);
 
-        rectComponent.setSizePx(left, bottom, rect.outerWidth(true), rect.outerHeight(true));
+        rectComponent.setSizePx(left, bottom, rect.outerWidth(true), rect.outerHeight(true), rect.parent());
         //TODO update property view
     }
 
     function renderView(){
         rect = element.renderView();
         rect.draggable({ 
-            containment: "parent",
+            containment: "#game-screen",
             drag: onElementDrag
         });
+
+        updateViews(element.data.name);
     }
 </script>
