@@ -187,7 +187,9 @@
         rect = element.renderView();
         rect.draggable({ 
             containment: "#game-screen",
-            drag: onElementDrag
+            drag: onElementDrag,
+            snap: ".element-container",
+            snapTolerance: 5
         });
 
         updateViews(element.data.name);
