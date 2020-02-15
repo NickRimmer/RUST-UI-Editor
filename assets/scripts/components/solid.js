@@ -20,4 +20,12 @@ export default class SolidComponent extends BaseComponent{
 
         return html;
     }
+
+    renderProperties(parent){
+        var html = $("#solid-component-properties").clone();
+        html.removeAttr("id");
+
+        if(parent) parent.append(html);
+        return html;
+    }
 }

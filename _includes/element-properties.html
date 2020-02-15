@@ -36,7 +36,7 @@
                 <div class="component-title" data-toggle="collapse" data-target="#add-components-area">Add component <i class="fas fa-plus float-right mr-1 mt-1 text-muted" style="padding-right: 1px;"></i></div>
                 <div id="add-components-area" class="component-properties collapse text-center" data-parent="#component-properties">
                     <div class="btn-group btn-group-sm">
-                        <button type="button" id="btn-add-component-rect" class="btn btn-secondary">Rect</button>
+                        <!-- <button type="button" id="btn-add-component-rect" class="btn btn-secondary">Rect</button> -->
                         <button type="button" id="btn-add-component-text" class="btn btn-secondary">Text</button>
                         <button type="button" id="btn-add-component-solid" class="btn btn-secondary">Solid</button>
                         <button type="button" id="btn-add-component-button" class="btn btn-secondary">Button</button>
@@ -125,6 +125,7 @@
 
         if(element.data.name !== name && elements.find(x => x.data.name === name)){
             console.warn(`name '${name}' already used`);
+            Swal.fire('Was not saved',`Name '${name}' already used`,'error');
             return;
         }
 
@@ -172,7 +173,8 @@
                 $(".component-properties", item).html(html);
 
                 componentAddBtn.before(item);
-                $(".btn-remove", item).on("click", () => removeComponent(item));
+                if(component instanceof RectTransform) $(".btn-remove", item).remove();
+                else $(".btn-remove", item).on("click", () => removeComponent(item));
             }
         });
 
@@ -190,6 +192,7 @@
 
     function removeComponent(item) {
         let id = $(".component-properties", item).prop("id");
+
         element.removeComponent(id);
         setupComponents();
         renderView();

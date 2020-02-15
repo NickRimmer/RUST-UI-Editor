@@ -19,9 +19,10 @@ export default class BaseComponent{
         console.warn("Component render properties not implemented");
         //console.log(this);
 
-        let html = $(`<div>Not implemented properties</div>`)
-        if(parent) parent.append(html);
+        var html = $("#base-component-properties").clone();
+        html.removeAttr("id");
 
+        if(parent) parent.append(html);
         return html;
     }
 }
