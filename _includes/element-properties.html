@@ -160,12 +160,14 @@
     function addComponent(component) {
         element.addComponent(component);
         setupComponents(component.id);
+        renderView();
     }
 
     function removeComponent(item) {
         let id = $(".component-properties", item).prop("id");
         element.removeComponent(id);
         setupComponents();
+        renderView();
         return false;
     }
 
