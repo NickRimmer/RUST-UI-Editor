@@ -30,12 +30,17 @@
     'use strict';
     import { eventDefines } from "/assets/scripts/defines.js";
     import { defaultParent } from "/assets/scripts/app.js";
-    import { elements } from "/assets/scripts/elements.js";
+    import { elements, addElement } from "/assets/scripts/elements.js";
 
     let menuArea = $("#els");
+    let lastHoveredItem;
 
     $(function () {
         $(window).on(eventDefines.elementsUpdated, renderMenu);
+
+        $("#btn-add-component-panel").on("click", () => createElement("panel"));
+        //$("#btn-add-component-text").on("click", () => createElement("text"));
+        //$("#btn-add-component-solid").on("click", () => createElement("solid"));
     })
 
     function renderMenu() {
@@ -58,6 +63,16 @@
         });
     }
 
+    function createElement(name, component){
+        let id = $("#add-btn-list").closest("li").find("a").attr("href").substr(1);
+        let parentName = elements.find(x => x.id === id).data.name;
+        onElementLeave();
+
+        addElement(name + "-" + Math.round(Math.random() * 1000000000), parentName);
+
+        return false;
+    }
+
     function buildMenuLevel(menu, parentName) {
         elements.filter(el => el.data.parent == parentName).forEach(el => {
             let elementName = el.data.name;
@@ -74,11 +89,15 @@
 
         btn.addClass("detached");
         trg.append(btn);
+
+        if(e.target != lastHoveredItem) $("#add-btn-list").dropdown("hide");
+        lastHoveredItem = e.target;
     }
 
     function onElementLeave() {
         var btn = $("#add-btn-list");
         btn.removeClass("detached");
         $("#add-btn-area").append(btn);
+        $("#add-btn-list").dropdown("hide");
     }
 </script>
