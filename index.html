@@ -4,25 +4,20 @@
 <div id="game-screen"></div>
 
 <script type="module">
-    import { addElement, elements, updateViews } from "/assets/scripts/elements.js"
-    import { defaultParent } from "/assets/scripts/app.js"
+    import {addElementWithRect} from "/assets/scripts/elements.js"
     import SolidComponent from "/assets/scripts/components/solid.js"
-    import {eventDefines} from "/assets/scripts/defines.js";
+    import {events} from "/assets/scripts/defines.js"
 
     $(function(){
         setTimeout(() => {
-            let first = addElement("test-1", defaultParent, true);
-            addElement("test-2", defaultParent, true);
-            let sub = addElement("sub-1", first.data.name, true);
+            let e1 = addElementWithRect("test-1", null, true);
+            let e2 = addElementWithRect("test-2", null, true);
+            let e3 = addElementWithRect("test-1-sub-1", e1.id, true);
 
-            let solid2 = new SolidComponent();
-            sub.addComponent(solid2);
+            e1.addComponent(new SolidComponent());
+            e3.addComponent(new SolidComponent());
 
-            let solid = new SolidComponent();
-            first.addComponent(solid);
-
-            updateViews();
-            $(window).trigger(eventDefines.elementsUpdated, elements);
+            $(window).trigger(events.elementsUpdated);
         }, 100);
     })
 </script>

@@ -28,68 +28,73 @@
 
 <script type="module">
     'use strict';
-    import { eventDefines } from "/assets/scripts/defines.js";
-    import { defaultParent } from "/assets/scripts/app.js";
-    import { elements, addElement, updateViews } from "/assets/scripts/elements.js";
-
+    import { events } from "/assets/scripts/defines.js";
+    import { elements, addElementWithRect } from "/assets/scripts/elements.js";
     import SolidComponent from "/assets/scripts/components/solid.js";
 
-    let menuArea = $("#els");
+    let rootMenu;
     let lastHoveredItem;
 
     $(function () {
-        $(window).on(eventDefines.elementsUpdated, renderMenu);
-
-        $("#btn-add-component-panel").on("click", () => createElement("panel"));
-        //$("#btn-add-component-text").on("click", () => createElement("text"));
-        $("#btn-add-component-solid").on("click", () => createElement("solid", new SolidComponent()));
-    })
+        rootMenu = $("#els");
+        $(window).on(events.elementsUpdated, renderMenu);
+        applyCreateMenuClicks();
+    });
 
     function renderMenu() {
-        menuArea.html("");
-        buildMenuLevel(menuArea, defaultParent);
+        rootMenu.html("");
+        renderMenuElements();
         applyHovers();
         applyClicks();
     }
 
+    function renderMenuElements(parentId) {
+        let els = elements.filter(x => x.parentId === (parentId || null));
+        els.forEach(element => renderMenuElement(element));
+    }
+
+    function renderMenuElement(element) {
+        let itemHtml = $(`<li class="nav-item el-item" id="menu_${element.id}"><a href="#${element.id}" class="nav-link">${(element.name || 'unknown')}</a><ul class="nav flex-column ml-2"></ul></li>`);
+        let parentHtml = element.parentId
+            ? $(`#menu_${element.parentId} > ul`)
+            : rootMenu;
+
+        parentHtml.append(itemHtml);
+        renderMenuElements(element.id);
+    }
+
     function applyHovers() {
-        $(".el-item > a", menuArea).on("mouseenter", onElementHover);
-        $(".el-item", menuArea).on("mouseleave", onElementLeave);
+        $(".el-item > a", rootMenu).on("mouseenter", onElementHover);
+        $(".el-item", rootMenu).on("mouseleave", onElementLeave);
         $(".sidebar").on("mouseleave", onElementLeave);
     }
 
     function applyClicks(){
-        $("a", menuArea).on("click", e => {
-            $(window).trigger(eventDefines.elementsMenuClicked, $(e.target).attr("href").substr(1));
+        $("a", rootMenu).on("click", e => {
+            $(window).trigger(events.showProperties, $(e.target).attr("href").substr(1));
             return false;
         });
     }
 
-    function createElement(name, component){
-        let parentName = defaultParent;
-        if($("#add-btn-list").is(".detached")){
-            let parentId = $("#add-btn-list").closest("li").find("a").attr("href").substr(1);
-            parentName = elements.find(x => x.id === parentId).data.name;
-        }
-        
-        onElementLeave();
-
-        let element = addElement(name + "-" + Math.round(Math.random() * 1000000000), parentName);
-        if(component) element.addComponent(component);
-
-        updateViews();
-        $(window).trigger(eventDefines.elementsAdded, element.id);
-        return false;
+    function applyCreateMenuClicks(){
+        $("#btn-add-component-panel").on("click", () => createElement("panel"));
+        $("#btn-add-component-solid").on("click", () => createElement("solid", new SolidComponent()));
+        //$("#btn-add-component-text").on("click", () => createElement("text"));
     }
 
-    function buildMenuLevel(menu, parentName) {
-        elements.filter(el => el.data.parent == parentName).forEach(el => {
-            let elementName = el.data.name;
-            let item = $(`<li class="nav-item el-item"><a href="#${el.id}" class="nav-link">${(elementName || 'unknown')}</a><ul class="nav flex-column ml-2"></ul></li>`);
+    function createElement(name, component){
+        let parentId = null;
+        if($("#add-btn-list").is(".detached")){
+            parentId = $("#add-btn-list").closest("li").find("a").attr("href").substr(1);
+        }
 
-            menu.append(item);
-            if (elementName) buildMenuLevel(item.children("ul"), elementName);
-        });
+        onElementLeave();
+        let element = addElementWithRect(name + "-" + Date.now(), parentId);
+        if(component) element.addComponent(component);
+
+        $(window).trigger(events.elementsUpdated);
+        $(window).trigger(events.elementAdded, element.id);
+        return false;
     }
 
     function onElementHover(e) {

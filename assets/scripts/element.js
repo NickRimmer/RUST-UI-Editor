@@ -1,130 +1,73 @@
 'use strict';
 import RectTransform from "./components/rect-transform.js";
-import {deepClone} from "./tools.js";
-import {eventDefines} from "./defines.js";
-import {defaultParent} from "./app.js";
-import {elements, updateViews} from "./elements.js";
+import { deepClone, pointsToPixels } from "./tools.js";
+import { getElement } from "./elements.js";
 
 export default class Element {
-    data;
     components = [];
     id;
+    parentId;
+    name;
 
-    constructor(data, component) {
-        this.data = data;
+    constructor(name, parentId) {
         this.id = ["element", Date.now(), Math.round(Math.random() * 1000)].join("_");
-
-        if (component) {
-            component.elementId = this.id;
-            this.components.push(component);
-        }
+        this.name = name || "rnd-" + Date.now();
+        this.parentId = parentId || null;
     }
 
-    renderView(parent) {
-        parent = parent || this.data.parent;
-        //console.log(`render: ${this.data.name}; parent: ${parent}`);
-
-        let rect = this.renderRect(parent);
-        if (!rect) {
+    renderView() {
+        let rectComponent = this.components.find(x => x.type === RectTransform.TypeName);
+        if (!rectComponent) {
             console.warn("Element doesn't contains Rect component");
             console.log(this);
             return;
         }
 
-        this.components
-            .filter(component => !(component instanceof RectTransform))
-            .forEach(component => component.renderView(rect));
+        let rectHtml = rectComponent.renderView();
 
-        return rect;
-    }
+        let otherComponents = this.components.filter(x => x.id !== rectComponent.id);
+        otherComponents.forEach(component => component.renderView());
 
-    renderRect(parent) {
-        parent = parent || this.data.parent;
-        
-        let rect = this.components.find(component => component instanceof RectTransform);
-        if (!rect) {
-            console.warn("Element not rendered cause there is no rect data");
-            return;
-        }
-
-        let parentElement = elements.find(x => x.data.name === parent);
-        let parentObject = (!parentElement)
-            ? $("#game-screen")
-            : $(`#${parentElement.id},[id-original=${parentElement.id}]`);
-
-        let html = rect.renderView(parentObject);
-        return html;
+        return rectHtml;
     }
 
     addComponent(component) {
         component.elementId = this.id;
 
         this.components.push(component);
-        this.renderView();
-
-        $(window).trigger(eventDefines.componentAdded, component);
     }
 
     removeComponent(id) {
         this.components = this.components.filter(x => x.id !== id);
     }
+
+    getParentHtml() {
+        if (this.parentId) return $(`#${this.parentId}`);
+        return $("#game-screen");
+    }
+
+    getHtml() {
+        return $(`#${this.id}`);
+    }
 }
 
-export class ElementTemp extends Element {
-    original;
+export class TempElement {
+    originalId;
 
-    constructor(obj) {
-        if (!obj) {
-            console.error("Original object required");
-            return;
-        }
+    constructor(originalId) {
+        this.originalId = originalId;
+        let element = getElement(this.originalId);
+        Object.assign(this, deepClone(element));
 
-        super();
-
-        Object.assign(this, deepClone(obj));
-
-        this.original = obj;
-        this.id = `${this.original.id}-temp`;
+        $(`#${this.originalId}`).addClass('element-temp');
     }
 
-    renderView(parent) {
-        let rect = super.renderView(parent);
-        rect.addClass("element-temp");
-        rect.attr("id-original", this.original.id);
-        $(`#${this.original.id}`).replaceWith(rect);
+    apply() {
+        let originalId = this.originalId;
+        delete this.originalId;
 
-        return rect;
-    }
-
-    restoreView() {
-        let rect = this.original.renderView();
-        $(`#${this.id}`).replaceWith(rect);
-        updateViews(this.original.data.name);
-    }
-
-    apply(updateView) {
-        // update parents
-        if(this.data.name !== this.original.data.name){
-            elements
-                .filter(x => x.data.parent === this.original.data.name)
-                .forEach(x => x.data.parent = this.data.name);
-        }
-
-        // hide properties
-        let id = this.id;
-        delete this.id;
-
-        let original = this.original;
-        delete this.original;
-
-        // clone
-        Object.assign(original, this);
-
-        // restore properties
-        this.id = id;
-        this.original = original;
-
-        if (updateView) this.restoreView();
+        let element = getElement(originalId);
+        Object.assign(element, this);
     }
 }
 

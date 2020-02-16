@@ -1,52 +1,109 @@
 'use strict';
 import BaseComponent from "./base.js";
+
 import { pointsToPixels, pixelsToPoints } from "../tools.js";
 
 export default class RectTransform extends BaseComponent {
     static TypeName = "RectTransform";
+    anchormin;
+    anchormax;
 
-    constructor(data) {
-        super(data || { anchormin: "0.4 0.4", anchormax: "0.6 0.6" }, RectTransform.TypeName);
+    constructor(anchormin, anchormax) {
+        super(RectTransform.TypeName);
+        this.anchormin = anchormin || "0.4 0.4";
+        this.anchormax = anchormax || "0.6 0.6";
     }
 
-    renderView(parent) {
-        let html = $(`<div id="${this.elementId}" class="element-container"></div>`);
-        this.updateView(html, parent);
+    renderView() {
+        $(`#${this.elementId}`).remove();
+        
+        let componentHtml = $(`<div id="${this.elementId}" class="element-container rect-component"></div>`);
+        let parentHtml = this.getElement().getParentHtml();
 
-        if (parent) {
-            $(`#${this.elementId}`).remove();
-            parent.append(html);
-        }
+        let px = pointsToPixels(this.anchormin, this.anchormax, parentHtml);
 
-        return html;
+        componentHtml.css({
+            left: px.left,
+            bottom: px.bottom,
+            width: px.width,
+            height: px.height,
+            top: "auto"
+        });
+
+        parentHtml.append(componentHtml);
+        return componentHtml;
     }
 
-    renderProperties(parent) {
+    renderProperties(){
         var html = $("#rect-transform-component-properties").clone();
         html.removeAttr("id");
 
-        $("#transform-left", html).on("keyup", () => { this.setTransformFromFields(); this.updateView() });
-        $("#transform-bottom", html).on("keyup", () => { this.setTransformFromFields(); this.updateView() });
-        $("#transform-width", html).on("keyup", () => { this.setTransformFromFields(); this.updateView() });
-        $("#transform-height", html).on("keyup", () => { this.setTransformFromFields(); this.updateView() });
+        this.setupEvents(html);
+        this.setupFields(html);
 
-        this.updatePropertiesView(html);
+        let target = $(`#properties_${this.id}`);
+        if(target) target.append(html);
 
-        if (parent) parent.append(html);
         return html;
     }
 
-    updatePropertiesView(html) {
-        html = html || $(`#${this.id}`);
+    setupEvents(html){
+        $("#transform-left", html).on("keyup change", () => { this.setTransformFromFields(); });
+        $("#transform-bottom", html).on("keyup change", () => { this.setTransformFromFields(); });
+        $("#transform-width", html).on("keyup change", () => { this.setTransformFromFields(); });
+        $("#transform-height", html).on("keyup change", () => { this.setTransformFromFields(); });
+    }
 
-        let parentHtml = $(`#${this.elementId},[id-original=${this.elementId}]`).parent();
-        let px = pointsToPixels(this.data.anchormin, this.data.anchormax, parentHtml);
+    setupFields(html){
+        html = html || $(`#properties_${this.id}`);
+        let parentHtml = this.getElement().getParentHtml();
+        let px = pointsToPixels(this.anchormin, this.anchormax, parentHtml);
 
         $("#transform-left", html).val(px.left);
         $("#transform-bottom", html).val(px.bottom);
         $("#transform-width", html).val(px.width);
         $("#transform-height", html).val(px.height);
     }
+
+    setTransformFromRect() {
+        let rect = this.getElement().getHtml();
+
+        let left = rect.position().left;
+        let bottom = rect.parent().outerHeight(true) - rect.position().top - rect.outerHeight(true);
+        let width = rect.outerWidth(true);
+        let height = rect.outerHeight(true);
+
+        let points = pixelsToPoints(left, bottom, width, height, rect.parent());
+        this.anchormin = `${points.xMin} ${points.yMin}`;
+        this.anchormax = `${points.xMax} ${points.yMax}`;
+    }
+
+    setTransformFromFields() {
+        let componentHtml = $(`#properties_${this.id}`);
+        let rect = this.getElement().getHtml();
+
+        let points = pixelsToPoints(
+            $("#transform-left", componentHtml).val(),
+            $("#transform-bottom", componentHtml).val(),
+            $("#transform-width", componentHtml).val(),
+            $("#transform-height", componentHtml).val(),
+            rect.parent());
+
+        console.log(rect);
+
+        this.anchormin = `${points.xMin} ${points.yMin}`;
+        this.anchormax = `${points.xMax} ${points.yMax}`;
+
+        rect.css({
+            left: $("#transform-left", componentHtml).val() * 1,
+            bottom: $("#transform-bottom", componentHtml).val() * 1,
+            width: $("#transform-width", componentHtml).val() * 1,
+            height:$("#transform-height", componentHtml).val() * 1,
+            top: "auto"
+        });
+    }
+
+    /*
 
     updateView(html, parentHtml) {
         html = html || $(`#${this.elementId},[id-original=${this.elementId}]`);
@@ -91,5 +148,5 @@ export default class RectTransform extends BaseComponent {
         let points = pixelsToPoints(left, bottom, width, height, parentHtml);
         this.data.anchormin = `${points.xMin} ${points.yMin}`;
         this.data.anchormax = `${points.xMax} ${points.yMax}`;
-    }
+    }*/
 }

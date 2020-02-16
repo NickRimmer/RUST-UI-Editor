@@ -1,8 +1,5 @@
 'use strict';
 
-export let jsonSpacer = "    ";
-export let defaultParent = "Hud";
-
 var askBeforeUnload = false;
 
 $(function () {

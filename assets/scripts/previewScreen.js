@@ -1,5 +1,8 @@
 'use strict';
 
+import {elements} from "./elements.js";
+import {events} from "./defines.js";
+
 export const images = [
     "/assets/images/screen1.jpg", 
     "/assets/images/screen2.jpg", 
@@ -16,7 +19,6 @@ class Config{
     width;
     height;
 
-    //constructor(image, width, height);
     constructor(image, width, height){
         this.image = image;
         this.width = width;
@@ -40,21 +42,40 @@ class Config{
 }
 
 export const config = Config.load();
+let gameScreen
 
 $(function () {
-    //config.load();
-    updateView();
+    gameScreen = $("#game-screen");
+    updateScreenView();
+
+    $(window).on(events.elementsUpdated, updateElementsView);
 })
 
 export function update(image, width, height) {
     config.update(image, width, height);
-    updateView();
+    updateScreenView();
 }
 
-function updateView() {
-    $("#game-screen").css({
+function updateScreenView() {
+    gameScreen.css({
         "background-image": "url(" + config.image + ")",
         "width": config.width + "px",
         "height": config.height + "px"
     });
+}
+
+export function updateElementsView(){
+    gameScreen.html("");
+    renderElements();
+}
+
+function renderElements(parentId){   
+    elements
+        .filter(x=>x.parentId == (parentId || null))
+        .forEach(element => renderElement(element));
+}
+
+function renderElement(element){
+    element.renderView();
+    renderElements(element.id);
 }
