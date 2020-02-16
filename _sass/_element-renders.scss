@@ -1,13 +1,43 @@
-.element-render-item{
-    position: absolute;
-}
+// .element-render-item{
+//     position: absolute;
+// }
 
-.element-render-solid{
-    background: #fff;
-}
+// .element-render-solid{
+//     background: #fff;
+// }
 
-.component-draggable-placeholder{
+// .component-draggable-placeholder{
+//     border: dashed 2px #ffbc00;
+//     cursor: grab;
+// }
+
+.element-container {
     position: absolute;
-    border: dashed 2px #ffbc00;
-    cursor: grab;
+    pointer-events: none;
+
+    .component-solid{
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    &.element-temp{
+        cursor: grab;
+        pointer-events: all;
+
+        &:after{
+            content: "";
+            border: dashed 1px #ffbc00;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            //margin: -2px;
+        }
+    }
 }

@@ -6,16 +6,12 @@
         </button>
     </div>
     <div class="card-body">
-        <!-- <h5 class="card-title">Card title</h5> -->
-        <!-- <p class="card-text">Hello, Universe!</p> -->
-        <!-- <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a> -->
-
         <div class="form-group row">
             <label for="ui-element-name" class="col-3 col-form-label">Name</label>
             <div class="col-9"><input type="text" class="form-control" id="ui-element-name" required placeholder="Unique name of element"></div>
         </div>
 
+        <!--
         <div class="form-group row">
             <label for="ui-element-parent" class="col-3 col-form-label">Parent</label>
             <div class="col-9">
@@ -27,19 +23,22 @@
                 </div>
             </div>
         </div>
-        
-        <div class="according list-group row px-1" id="component-properties">
-            <div class="list-group-item p-0 d-none component-item item-template">
+        -->
+
+        <div class="d-none templates">
+            <div class="list-group-item p-0 component-item">
                 <div class="component-title" data-toggle="collapse"></div>
-                <a class="btn-remove" href=""><i class="fas fa-trash"></i></a>
+                <a class="btn-remove" href="#"><i class="fas fa-trash"></i></a>
                 <div class="component-properties collapse" data-parent="#component-properties"></div>
             </div>
+        </div>
 
-            <div class="list-group-item btn-add p-0 add-template">
+        <div class="according list-group row px-1" id="component-properties">
+            <div class="list-group-item p-0 component-add-btn">
                 <div class="component-title" data-toggle="collapse" data-target="#add-components-area">Add component <i class="fas fa-plus float-right mr-1 mt-1 text-muted" style="padding-right: 1px;"></i></div>
                 <div id="add-components-area" class="component-properties collapse text-center" data-parent="#component-properties">
                     <div class="btn-group btn-group-sm">
-                        <button type="button" id="btn-add-component-rect" class="btn btn-secondary">Rect</button>
+                        <!-- <button type="button" id="btn-add-component-rect" class="btn btn-secondary">Rect</button> -->
                         <button type="button" id="btn-add-component-text" class="btn btn-secondary">Text</button>
                         <button type="button" id="btn-add-component-solid" class="btn btn-secondary">Solid</button>
                         <button type="button" id="btn-add-component-button" class="btn btn-secondary">Button</button>
@@ -54,10 +53,220 @@
         <button type="button" id="element-properties-remove" class="btn btn-danger float-left"><i class="fas fa-trash"></i></button>
 
         <!-- <button title="Add component" type="button" id="element-properties-add-component" class="btn btn-secondary"><i class="fas fa-plus-circle"></i></button> -->
-        <button type="submit" id="element-properties-save" class="btn btn-primary" disabled>Save changes</button>
+        <button type="submit" id="element-properties-save" class="btn btn-primary">Save changes</button>
     </div>
 </form>
 
 <div class="d-none">
     {% include components/_all-properties.html %}
 </div>
+
+<script type="module">
+    'use strict';
+    import { events } from "/assets/scripts/defines.js";
+    import { removeElement, getElement, elements } from "/assets/scripts/elements.js";
+    import { TempElement } from "/assets/scripts/element.js";
+    import RectTransform from "/assets/scripts/components/rect-transform.js";
+
+    let form;
+    let tempElement;
+
+    $(function(){
+        setupForm();
+        setupEvents();
+    });
+
+    function setupForm(){
+        form = $("#element-properties");
+        form.draggable({ handle: ".draggable-handle", containment: "parent" });
+        form.on("submit", saveProperties);
+
+        $("#element-properties-close", form).on("click", closeProperties);
+        $("#element-properties-remove", form).on("click", onRemoveElementClicked);
+        
+        $("#btn-add-component-rect", form).on("click", () => addComponent(new RectTransform()));
+        $("#btn-add-component-solid", form).on("click", () => addComponent(new SolidComponent()));
+    }
+
+    function setupEvents(){
+        $(window).on(events.showProperties, (e, id) => openProperties(id));
+        $(window).on(events.elementAdded, (e, id) => openProperties(id));
+        //$(window).on(eventDefines.modalOpened, closeProperties);
+    }
+
+    function saveProperties(){
+        let name = $("#ui-element-name", form).val();
+
+        if(tempElement.name !== name && elements.find(x => x.name === name)){
+            Swal.fire('Was not saved',`Name '${name}' already used`,'error');
+            return false;
+        }
+
+        tempElement.name = name;
+        tempElement.apply();
+        
+        closeProperties();
+        $(window).trigger(events.elementsUpdated);
+
+        return false;
+    }
+
+    function closeProperties(){
+        cleanUp();
+        form.addClass("d-none");
+        $(window).trigger(events.elementsUpdated);
+    }
+
+    function cleanUp(){
+        if(!tempElement) return;
+
+        $(".element-temp").draggable("destroy");
+        $(window).trigger(events.elementsUpdated);
+        tempElement = null;
+    }
+
+    function onRemoveElementClicked(){
+        removeElement(tempElement.id);
+        closeProperties();
+    }
+
+    function openProperties(id){
+        cleanUp();
+        createTemp(id);
+        setupProperties();
+        setupComponents();
+        setupDraggable();
+
+        form.removeClass("d-none");
+        $("#ui-element-name", form).focus();
+        $("#ui-element-name", form).select();
+    }
+
+    function createTemp(id){
+        tempElement = new TempElement(id);
+    }
+
+    function setupProperties() {
+        $("#ui-element-name", form).val(tempElement.name);
+    }
+
+    function setupComponents(idToOpen) {
+        $("#component-properties > .component-item", form).remove();
+        if (tempElement.components.length === 0) return;
+
+        tempElement.components.forEach(component => setupComponent(component));
+
+        if (!idToOpen) idToOpen = tempElement.components[0].id;
+
+        let componentPropertyView = $(`#properties_${idToOpen}`, form);
+        if (componentPropertyView) setTimeout(() => componentPropertyView.collapse("show"), 100);
+    }
+
+    function setupComponent(component){
+        let item = $(".templates > .component-item", form).clone();
+        let componentPropertiesId = `properties_${component.id}`;
+
+        $(".component-title", item).html(component.type);
+        $(".component-title", item).attr("data-target", "#" + componentPropertiesId);
+        $(".component-properties", item).prop("id", componentPropertiesId);
+        $(".component-add-btn", form).before(item);
+
+        component.renderProperties();
+
+        if(component instanceof RectTransform) $(".btn-remove", item).remove();
+        else $(".btn-remove", item).on("click", () => removeComponent(component.id));
+    }
+
+    function setupDraggable(){
+        $(".element-temp").draggable({ 
+            containment: "#game-screen",
+            stop: onElementDrag,
+            snap: ".element-container",
+            snapTolerance: 5
+        });
+    }
+    
+    function onElementDrag(){
+        let rectComponent = tempElement.components.find(x => x instanceof RectTransform);
+        if(!rectComponent){
+            console.warn("Rect component not found")
+            return;
+        }
+
+        rectComponent.setTransformFromRect();
+        rectComponent.setupFields();
+    }
+
+    function removeComponent(componentId){
+        throw new Error("Not implemented");
+    }
+
+    /*
+    function saveProperties() {
+        let name = $("#ui-element-name", dialog).val();
+        //let parent = $("#ui-element-parent", dialog).val();
+
+        if(element.data.name !== name && elements.find(x => x.data.name === name)){
+            console.warn(`name '${name}' already used`);
+            Swal.fire('Was not saved',`Name '${name}' already used`,'error');
+            return;
+        }
+
+        element.data.name = name;
+        element.apply(true);
+        $(window).trigger(eventDefines.elementsUpdated, element.original);
+        closeProperties();
+    }
+
+    function addComponent(component) {
+        element.addComponent(component);
+        setupComponents(component.id);
+        renderView();
+    }
+
+    function removeComponent(item) {
+        let id = $(".component-properties", item).prop("id");
+
+        element.removeComponent(id);
+        setupComponents();
+        renderView();
+        return false;
+    }
+
+    function onElementDrag(){
+        let rectComponent = element.components.find(x => x instanceof RectTransform);
+        if(!rectComponent){
+            console.warn("Rect component not found")
+            return;
+        }
+
+        // let left = rect.position().left;
+        // let bottom = rect.parent().outerHeight(true) - rect.position().top - rect.outerHeight(true);
+
+        //rectComponent.setSizePx(left, bottom, rect.outerWidth(true), rect.outerHeight(true));
+        rectComponent.setTransformFromRect();
+        rectComponent.updatePropertiesView();
+        //TODO update property view
+    }
+
+    function renderView(){
+        rect = element.renderView();
+        rect.draggable({ 
+            containment: "#game-screen",
+            //drag: onElementDrag,
+            stop: onElementDrag,
+            snap: ".element-container",
+            snapTolerance: 5
+        });
+
+        updateViews(element.data.name);
+    }
+
+    function onRemoveElementClicked(){
+        let name = element.original.id;
+        removeElement(name);
+        closeProperties();
+        $(window).trigger(eventDefines.elementsUpdated, elements);
+    }
+    */
+</script>

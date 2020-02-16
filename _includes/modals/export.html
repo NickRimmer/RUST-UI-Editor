@@ -10,17 +10,26 @@
 {% include modals/_template.html content=content id=id title=title hideSave=true size="modal-xl" %}
 
 <script type="module">
-    import { uiElements, jsonSpacer } from "/assets/scripts/app.js";
-    import { hideProperties } from '/assets/scripts/element-properties.js';
+    'use strict';
+    /*
+    import {elements} from "/assets/scripts/elements.js"
+    import {jsonSpacer} from "/assets/scripts/app.js"
+    import {eventDefines} from "/assets/scripts/defines.js"
 
-    var dialog = $("#{{id}}");
+    $(window).on(eventDefines.modalOpened, (e, modal) => {
+        if($(modal).prop("id") !== "exportModal") return;
 
-    $(function () {
-        dialog.on("show.bs.modal", onShowed);
-    })
+        let result = [];
+        elements.forEach(element => {
+            let components = element.components.map(component => component.data);
+            let data = element.data;
+            data.components = components;
 
-    function onShowed() {
-        hideProperties();
-        $("#exportJsonTa").val(JSON.stringify(uiElements, null, jsonSpacer));
-    }
+            result.push(data);
+        });
+
+        let json = JSON.stringify(result, null, jsonSpacer);
+        $("#exportJsonTa").val(json);
+    });
+    */
 </script>

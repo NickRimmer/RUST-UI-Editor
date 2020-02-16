@@ -1,27 +1,117 @@
 <nav class="col-2 bg-light sidebar">
-  <div class="sidebar-sticky">
-    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-      <span>UI Elements</span>
-      <!-- <a href="#" class="btn-icon btn-add-component"><i class="fas fa-plus-circle"></i></a> -->
+    <div class="sidebar-sticky">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>UI Elements</span>
+            <!-- <a href="#" class="btn-icon btn-add-component"><i class="fas fa-plus-circle"></i></a> -->
 
-      <div id="add-btn-area">
-        <div class="dropdown" id="add-btn-list">
-          <a class="dropdown-toggle btn-icon" href="#" role="button" id="btn-add-element" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-plus-circle"></i>
-          </a>
+            <div id="add-btn-area">
+                <div class="dropdown" id="add-btn-list">
+                    <a class="dropdown-toggle btn-icon" href="#" role="button" id="btn-add-element" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-plus-circle"></i>
+                    </a>
 
-          <div class="dropdown-menu" aria-labelledby="btn-add-element">
-            <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" id="btn-add-component-text" href="#">Text</a>
-            <a class="dropdown-item disabled" href="#">Button</a>
-            <a class="dropdown-item" href="#" id="btn-add-component-solid">Solid color</a>
-            <a class="dropdown-item disabled" href="#">Image from url</a>
-          </div>
-        </div>
-      </div>
-    </h6>
-    <div class="px-3 no-elements d-none">Just add your first component</div>
-    <ul id="els" class="nav flex-column mb-2"></ul>
-  </div>
+                    <div class="dropdown-menu" aria-labelledby="btn-add-element">
+                        <a class="dropdown-item" id="btn-add-component-panel" href="#">Empty panel</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" id="btn-add-component-text" href="#">Text</a>
+                        <a class="dropdown-item disabled" href="#">Button</a>
+                        <a class="dropdown-item" href="#" id="btn-add-component-solid">Solid color</a>
+                        <a class="dropdown-item disabled" href="#">Image from url</a>
+                    </div>
+                </div>
+            </div>
+        </h6>
+        <div class="px-3 no-elements d-none">Just add your first component</div>
+        <ul id="els" class="nav flex-column mb-2"></ul>
+    </div>
 </nav>
+
+<script type="module">
+    'use strict';
+    import { events } from "/assets/scripts/defines.js";
+    import { elements, addElementWithRect } from "/assets/scripts/elements.js";
+    import SolidComponent from "/assets/scripts/components/solid.js";
+
+    let rootMenu;
+    let lastHoveredItem;
+
+    $(function () {
+        rootMenu = $("#els");
+        $(window).on(events.elementsUpdated, renderMenu);
+        applyCreateMenuClicks();
+    });
+
+    function renderMenu() {
+        rootMenu.html("");
+        renderMenuElements();
+        applyHovers();
+        applyClicks();
+    }
+
+    function renderMenuElements(parentId) {
+        let els = elements.filter(x => x.parentId === (parentId || null));
+        els.forEach(element => renderMenuElement(element));
+    }
+
+    function renderMenuElement(element) {
+        let itemHtml = $(`<li class="nav-item el-item" id="menu_${element.id}"><a href="#${element.id}" class="nav-link">${(element.name || 'unknown')}</a><ul class="nav flex-column ml-2"></ul></li>`);
+        let parentHtml = element.parentId
+            ? $(`#menu_${element.parentId} > ul`)
+            : rootMenu;
+
+        parentHtml.append(itemHtml);
+        renderMenuElements(element.id);
+    }
+
+    function applyHovers() {
+        $(".el-item > a", rootMenu).on("mouseenter", onElementHover);
+        $(".el-item", rootMenu).on("mouseleave", onElementLeave);
+        $(".sidebar").on("mouseleave", onElementLeave);
+    }
+
+    function applyClicks(){
+        $("a", rootMenu).on("click", e => {
+            $(window).trigger(events.showProperties, $(e.target).attr("href").substr(1));
+            return false;
+        });
+    }
+
+    function applyCreateMenuClicks(){
+        $("#btn-add-component-panel").on("click", () => createElement("panel"));
+        $("#btn-add-component-solid").on("click", () => createElement("solid", new SolidComponent()));
+        //$("#btn-add-component-text").on("click", () => createElement("text"));
+    }
+
+    function createElement(name, component){
+        let parentId = null;
+        if($("#add-btn-list").is(".detached")){
+            parentId = $("#add-btn-list").closest("li").find("a").attr("href").substr(1);
+        }
+
+        onElementLeave();
+        let element = addElementWithRect(name + "-" + Date.now(), parentId);
+        if(component) element.addComponent(component);
+
+        $(window).trigger(events.elementsUpdated);
+        $(window).trigger(events.elementAdded, element.id);
+        return false;
+    }
+
+    function onElementHover(e) {
+        var btn = $("#add-btn-list");
+        var trg = $(e.target).closest(".el-item");
+
+        btn.addClass("detached");
+        trg.append(btn);
+
+        if(e.target != lastHoveredItem) $("#add-btn-list").dropdown("hide");
+        lastHoveredItem = e.target;
+    }
+
+    function onElementLeave() {
+        var btn = $("#add-btn-list");
+        btn.removeClass("detached");
+        $("#add-btn-area").append(btn);
+        $("#add-btn-list").dropdown("hide");
+    }
+</script>

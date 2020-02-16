@@ -1,43 +1,38 @@
 'use strict';
+import { elements } from "./../elements.js";
 
-import { componentType } from "./../ui-components.js";
-import { pointsToPixels } from "./../tools.js";
+export default class BaseComponent{
+    elementId;
+    id;
+    type;
 
-export class BaseComponent {
-    constructor(componentData, configurationViewId) {
-        this.data = componentData;
-
-        if (configurationViewId) {
-            this.configurationView = $("#" + configurationViewId).clone();
-            this.configurationView.removeProp("id");
-        }
+    constructor(type){
+        this.type = type;
+        this.id = ["component", Date.now(), Math.round(Math.random() * 1000)].join("_");
     }
 
-    renderProperties() {
-        if(this.configurationView) this.configurationView.data("handler", this);
-        return `<div>${JSON.stringify(this.data)}</div>`;
+    renderView(){
+        console.warn("Component render view not implemented");
+        console.log(this);
     }
 
-    getRect(el){
-        // if(!el) return null;
-        // if(!el.components) return null;
-        return el.components.find(x=>x.type == componentType.rectTransform);
+    renderProperties(){
+        var html = $("#base-component-properties").clone();
+        html.removeAttr("id");
+
+        let target = $(`#properties_${this.id}`);
+        if(target) target.append(html);
+
+        return html;
     }
 
-    getTransform(el){
-        let rect = this.getRect(el);
-        
-        if(!rect){
-            //console.warn("Can't return transform without rect");
+    getElement(){
+        let element = elements.find(x => x.id === this.elementId);
+        if(!element){
+            console.error(`Element with id '${this.elementId}' not found`);
             return;
         }
 
-        return pointsToPixels(rect.anchormin, rect.anchormax);
-    }
-
-    renderView(el){}
-
-    save(){
-        console.log(this.data);
+        return element;
     }
 }
