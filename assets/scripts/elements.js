@@ -32,13 +32,10 @@ export function removeElement(id) {
 }
 
 function removeElementInner(element) {
-    throw new Error("Not implemented");
-    /*
-    let children = elements.filter(x=>x.data.parent == element.data.name);
+    let children = elements.filter(x => x.parentId == element.id);
     children.forEach(child => removeElementInner(child));
 
-    elements = elements.filter(x=>x.id !== element.id);
-    */
+    elements = elements.filter(x => x.id !== element.id);
 }
 
 export function getElement(id) {

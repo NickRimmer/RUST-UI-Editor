@@ -38,7 +38,12 @@ export default class Element {
     }
 
     removeComponent(id) {
+        let component = this.components.find(x => x.id === id);
+        if(!component) return false;
+        component.remove();
+
         this.components = this.components.filter(x => x.id !== id);
+        return true;
     }
 
     getParentHtml() {
@@ -51,7 +56,7 @@ export default class Element {
     }
 }
 
-export class TempElement {
+/*export class TempElement {
     originalId;
 
     constructor(originalId) {
@@ -69,5 +74,8 @@ export class TempElement {
         let element = getElement(originalId);
         Object.assign(element, this);
     }
-}
 
+    removeComponent(id) {
+        throw new Error("Not implemented");
+    }
+}*/

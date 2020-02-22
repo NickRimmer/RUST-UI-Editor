@@ -3,6 +3,7 @@
 export const events = {
     elementsUpdated: "elements.updated",
     elementAdded: "element.added",
+    elementRenamed: "element.renamed",
     showProperties: "element.showProperties"
 }
 

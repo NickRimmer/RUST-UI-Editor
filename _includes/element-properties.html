@@ -50,10 +50,10 @@
     </div>
 
     <div class="card-footer text-right">
-        <button type="button" id="element-properties-remove" class="btn btn-danger float-left"><i class="fas fa-trash"></i></button>
+        <button type="button" id="element-properties-remove" class="btn btn-danger"><i class="fas fa-trash"></i> Remove</button>
 
         <!-- <button title="Add component" type="button" id="element-properties-add-component" class="btn btn-secondary"><i class="fas fa-plus-circle"></i></button> -->
-        <button type="submit" id="element-properties-save" class="btn btn-primary">Save changes</button>
+        <!-- <button type="submit" id="element-properties-save" class="btn btn-primary">Save changes</button> -->
     </div>
 </form>
 
@@ -65,11 +65,11 @@
     'use strict';
     import { events } from "/assets/scripts/defines.js";
     import { removeElement, getElement, elements } from "/assets/scripts/elements.js";
-    import { TempElement } from "/assets/scripts/element.js";
     import RectTransform from "/assets/scripts/components/rect-transform.js";
+    import SolidComponent from "/assets/scripts/components/solid.js";
 
     let form;
-    let tempElement;
+    let element;
 
     $(function(){
         setupForm();
@@ -79,36 +79,20 @@
     function setupForm(){
         form = $("#element-properties");
         form.draggable({ handle: ".draggable-handle", containment: "parent" });
-        form.on("submit", saveProperties);
+        form.on("submit", closeProperties);
+
+        $("#ui-element-name", form).on("change keyup", updateName);
 
         $("#element-properties-close", form).on("click", closeProperties);
         $("#element-properties-remove", form).on("click", onRemoveElementClicked);
         
-        $("#btn-add-component-rect", form).on("click", () => addComponent(new RectTransform()));
         $("#btn-add-component-solid", form).on("click", () => addComponent(new SolidComponent()));
     }
 
     function setupEvents(){
         $(window).on(events.showProperties, (e, id) => openProperties(id));
         $(window).on(events.elementAdded, (e, id) => openProperties(id));
-        //$(window).on(eventDefines.modalOpened, closeProperties);
-    }
-
-    function saveProperties(){
-        let name = $("#ui-element-name", form).val();
-
-        if(tempElement.name !== name && elements.find(x => x.name === name)){
-            Swal.fire('Was not saved',`Name '${name}' already used`,'error');
-            return false;
-        }
-
-        tempElement.name = name;
-        tempElement.apply();
-        
-        closeProperties();
-        $(window).trigger(events.elementsUpdated);
-
-        return false;
+        $(window).on(events.modalOpened, closeProperties);
     }
 
     function closeProperties(){
@@ -118,45 +102,43 @@
     }
 
     function cleanUp(){
-        if(!tempElement) return;
+        if(!element) return;
 
         $(".element-temp").draggable("destroy");
         $(window).trigger(events.elementsUpdated);
-        tempElement = null;
+        element = null;
     }
 
     function onRemoveElementClicked(){
-        removeElement(tempElement.id);
+        removeElement(element.id);
         closeProperties();
     }
 
     function openProperties(id){
         cleanUp();
-        createTemp(id);
+        element = getElement(id);
+
         setupProperties();
         setupComponents();
         setupDraggable();
 
         form.removeClass("d-none");
+        $(".is-invalid", form).removeClass("is-invalid");
         $("#ui-element-name", form).focus();
         $("#ui-element-name", form).select();
     }
 
-    function createTemp(id){
-        tempElement = new TempElement(id);
-    }
-
     function setupProperties() {
-        $("#ui-element-name", form).val(tempElement.name);
+        $("#ui-element-name", form).val(element.name);
     }
 
     function setupComponents(idToOpen) {
         $("#component-properties > .component-item", form).remove();
-        if (tempElement.components.length === 0) return;
+        if (element.components.length === 0) return;
 
-        tempElement.components.forEach(component => setupComponent(component));
+        element.components.forEach(component => setupComponent(component));
 
-        if (!idToOpen) idToOpen = tempElement.components[0].id;
+        if (!idToOpen) idToOpen = element.components[0].id;
 
         let componentPropertyView = $(`#properties_${idToOpen}`, form);
         if (componentPropertyView) setTimeout(() => componentPropertyView.collapse("show"), 100);
@@ -178,7 +160,7 @@
     }
 
     function setupDraggable(){
-        $(".element-temp").draggable({ 
+        $(`#${element.id}`).draggable({ 
             containment: "#game-screen",
             stop: onElementDrag,
             snap: ".element-container",
@@ -187,7 +169,7 @@
     }
     
     function onElementDrag(){
-        let rectComponent = tempElement.components.find(x => x instanceof RectTransform);
+        let rectComponent = element.components.find(x => x instanceof RectTransform);
         if(!rectComponent){
             console.warn("Rect component not found")
             return;
@@ -198,75 +180,37 @@
     }
 
     function removeComponent(componentId){
-        throw new Error("Not implemented");
-    }
-
-    /*
-    function saveProperties() {
-        let name = $("#ui-element-name", dialog).val();
-        //let parent = $("#ui-element-parent", dialog).val();
-
-        if(element.data.name !== name && elements.find(x => x.data.name === name)){
-            console.warn(`name '${name}' already used`);
-            Swal.fire('Was not saved',`Name '${name}' already used`,'error');
-            return;
+        if(element.removeComponent(componentId)){
+            $(`#properties_${componentId}`).parent().remove();
         }
-
-        element.data.name = name;
-        element.apply(true);
-        $(window).trigger(eventDefines.elementsUpdated, element.original);
-        closeProperties();
     }
 
-    function addComponent(component) {
+    function addComponent(component){
         element.addComponent(component);
         setupComponents(component.id);
-        renderView();
+        component.renderView();
     }
 
-    function removeComponent(item) {
-        let id = $(".component-properties", item).prop("id");
+    function updateName(){
+        $("#ui-element-name").removeClass("is-invalid");
 
-        element.removeComponent(id);
-        setupComponents();
-        renderView();
-        return false;
-    }
+        let name = $("#ui-element-name").val();
+        if(element.name === name) return;
 
-    function onElementDrag(){
-        let rectComponent = element.components.find(x => x instanceof RectTransform);
-        if(!rectComponent){
-            console.warn("Rect component not found")
+        if(!element.name){
+            $("#ui-element-name").addClass("is-invalid");
             return;
         }
 
-        // let left = rect.position().left;
-        // let bottom = rect.parent().outerHeight(true) - rect.position().top - rect.outerHeight(true);
+        if(elements.find(x => x.name === name)){
+            //Swal.fire('Was not saved',`Name '${name}' already used`,'error');
+            $("#ui-element-name").addClass("is-invalid");
+            return;
+        }
 
-        //rectComponent.setSizePx(left, bottom, rect.outerWidth(true), rect.outerHeight(true));
-        rectComponent.setTransformFromRect();
-        rectComponent.updatePropertiesView();
-        //TODO update property view
+        $("#ui-element-name").removeClass("is-invalid");
+
+        element.name = name;
+        $(window).trigger(events.elementRenamed);
     }
-
-    function renderView(){
-        rect = element.renderView();
-        rect.draggable({ 
-            containment: "#game-screen",
-            //drag: onElementDrag,
-            stop: onElementDrag,
-            snap: ".element-container",
-            snapTolerance: 5
-        });
-
-        updateViews(element.data.name);
-    }
-
-    function onRemoveElementClicked(){
-        let name = element.original.id;
-        removeElement(name);
-        closeProperties();
-        $(window).trigger(eventDefines.elementsUpdated, elements);
-    }
-    */
 </script>

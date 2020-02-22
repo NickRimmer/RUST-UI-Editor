@@ -38,6 +38,7 @@
     $(function () {
         rootMenu = $("#els");
         $(window).on(events.elementsUpdated, renderMenu);
+        $(window).on(events.elementRenamed, renderMenu);
         applyCreateMenuClicks();
     });
 

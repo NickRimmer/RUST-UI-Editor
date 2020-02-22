@@ -35,4 +35,8 @@ export default class BaseComponent{
 
         return element;
     }
+
+    remove(){
+        $(`#${this.id}`).remove();
+    }
 }
