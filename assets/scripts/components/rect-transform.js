@@ -52,6 +52,7 @@ export default class RectTransform extends BaseComponent {
         $("#transform-bottom", html).on("keyup change", () => { this.setTransformFromFields(); });
         $("#transform-width", html).on("keyup change", () => { this.setTransformFromFields(); });
         $("#transform-height", html).on("keyup change", () => { this.setTransformFromFields(); });
+        $("#btn-expand", html).on("click", _ => this.expandToParent());
     }
 
     setupFields(html){
@@ -89,8 +90,6 @@ export default class RectTransform extends BaseComponent {
             $("#transform-height", componentHtml).val(),
             rect.parent());
 
-        console.log(rect);
-
         this.anchormin = `${points.xMin} ${points.yMin}`;
         this.anchormax = `${points.xMax} ${points.yMax}`;
 
@@ -101,6 +100,13 @@ export default class RectTransform extends BaseComponent {
             height:$("#transform-height", componentHtml).val() * 1,
             top: "auto"
         });
+    }
+
+    expandToParent(){
+        this.anchormin = "0 0";
+        this.anchormax = "1 1";
+        this.setupFields();
+        this.setTransformFromFields();
     }
 
     /*
