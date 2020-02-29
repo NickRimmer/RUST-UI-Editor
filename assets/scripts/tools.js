@@ -99,3 +99,33 @@ function roundPoints(value) {
     return Math.round(value * 1000) / 1000;
     return value;
 }
+
+export function setupPicker(html, onSave) {
+    let color = html.val();
+    let picker = Pickr.create({
+        el: $(html)[0],
+        theme: 'monolith',
+        default: color,
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+
+            interaction: {
+                input: true,
+                //hex: true,
+                //rgba: true,
+                save: true,
+                //cancel: true
+            }
+        },
+        strings: {
+            cancel: "Reset"
+        }
+    });
+
+    picker.on("save", (color, instance) => {
+        picker.hide();
+        onSave(color)
+    });
+}

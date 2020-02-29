@@ -50,7 +50,8 @@
     </div>
 
     <div class="card-footer text-right">
-        <button type="button" id="element-properties-remove" class="btn btn-danger"><i class="fas fa-trash"></i> Remove</button>
+        <button type="button" id="element-properties-remove" class="btn btn-danger float-left"><i class="fas fa-trash"></i> Remove</button>
+        <button type="submit" id="element-properties-close2" class="btn btn-primary">Close</button>
 
         <!-- <button title="Add component" type="button" id="element-properties-add-component" class="btn btn-secondary"><i class="fas fa-plus-circle"></i></button> -->
         <!-- <button type="submit" id="element-properties-save" class="btn btn-primary">Save changes</button> -->
@@ -67,6 +68,7 @@
     import { removeElement, getElement, elements } from "/assets/scripts/elements.js";
     import RectTransform from "/assets/scripts/components/rect-transform.js";
     import SolidComponent from "/assets/scripts/components/solid.js";
+    import TextComponent from "/assets/scripts/components/text.js";
 
     let form;
     let element;
@@ -83,10 +85,11 @@
 
         $("#ui-element-name", form).on("change keyup", updateName);
 
-        $("#element-properties-close", form).on("click", closeProperties);
+        $("#element-properties-close,element-properties-close2", form).on("click", closeProperties);
         $("#element-properties-remove", form).on("click", onRemoveElementClicked);
         
         $("#btn-add-component-solid", form).on("click", () => addComponent(new SolidComponent()));
+        $("#btn-add-component-text", form).on("click", () => addComponent(new TextComponent()));
     }
 
     function setupEvents(){
@@ -99,6 +102,8 @@
         cleanUp();
         form.addClass("d-none");
         $(window).trigger(events.elementsUpdated);
+
+        return false;
     }
 
     function cleanUp(){
@@ -197,7 +202,7 @@
         let name = $("#ui-element-name").val();
         if(element.name === name) return;
 
-        if(!element.name){
+        if(!name){
             $("#ui-element-name").addClass("is-invalid");
             return;
         }
